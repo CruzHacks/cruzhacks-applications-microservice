@@ -1,0 +1,28 @@
+version: "3.1"
+
+services:
+  function:
+    build: ./
+    container_name: cruzhacks_hackers_applications_service
+    env_file: .env
+    ports:
+      - "7071:7071"
+    depends_on:
+      - database
+  database:
+    image: postgres:11.3-alpine
+    container_name: cruzhacks_hackers_applications_db
+    volumes:
+      - "./database/:/docker-entrypoint-initdb.d"
+    restart: always
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
