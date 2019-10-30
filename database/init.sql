@@ -1,6 +1,3 @@
-CREATE USER cruzhacks;
-CREATE DATABASE cruzhacks;
-GRANT ALL PRIVILEGES ON DATABASE cruzhacks TO cruzhacks;
 
 DROP TABLE IF EXISTS "hackers";
 

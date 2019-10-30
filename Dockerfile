@@ -5,9 +5,10 @@ LABEL maintainer="CruzHacks 2020"
 LABEL version="1.0.0"
 LABEL repo="https://github.com/CruzHacks/cruzhacks-applications-microservice"
 
-WORKDIR /cruzhacks-application-service
-COPY ./ ./
+ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
+    AzureFunctionsJobHost__Logging__Console__IsEnabled=true
 
-EXPOSE 7071
+COPY . /home/site/wwwroot
 
-CMD ["func", "start"]
+RUN cd /home/site/wwwroot && \
+    npm install

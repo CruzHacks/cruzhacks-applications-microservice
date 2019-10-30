@@ -6,7 +6,7 @@ services:
     container_name: cruzhacks_hackers_applications_service
     env_file: .env
     ports:
-      - "7071:7071"
+      - "7071:80"
     depends_on:
       - database
   database:
