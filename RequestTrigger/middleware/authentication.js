@@ -4,10 +4,6 @@ module.exports = (functionContext, requestObject) => {
   const requestKey = headers.authentication || queryParameters.authentication;
   const correctKey = process.env["API_KEY"];
 
-  functionContext.log.warn(JSON.stringify(requestObject, null, 2));
-  functionContext.log.warn(requestKey);
-  functionContext.log.warn(correctKey);
-
   if (correctKey === undefined) {
     functionContext.log.error("ERROR: UNSET API KEY ENV VAR");
     return false;
