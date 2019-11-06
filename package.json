@@ -5,6 +5,10 @@
   "scripts": {
     "test": "echo \"No tests yet...\""
   },
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "knex": "^0.20.1",
+    "pg": "^7.12.1"
+  },
   "devDependencies": {}
 }
