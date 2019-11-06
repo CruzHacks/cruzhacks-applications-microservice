@@ -81,25 +81,13 @@ const insert = async (req) => {
 }
 
 module.exports = async function (context, req) {
-    // if(req.method == "GET"){
-    //     const exist = await recordExist(req)
-    //     if(exist){
-    //         context.res = {
-    //             body: "you connected with the db"
-    //         }
-    //     }else{
-    //         context.res = {
-    //             body: "you kinda failed"
-    //         }
-    //     }
-    // }
 
     if(req.method == "POST"){
         const exist = await recordExist(req)
 
         if(exist){
             context.res = {
-                body: "Person already exists in database"
+                body: `${req.body.email} already exists in database`
             }
         }else{
             try {
