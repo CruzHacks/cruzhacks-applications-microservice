@@ -1,5 +1,5 @@
 const authenticateApiKey = require("./middleware/authentication");
-const { dbConnection, recordExist } = require("./database");
+const { dbConnection, recordExist, insertRecord } = require("./database");
 
 const getAuth0IdFromRequest = requestObject => {
   const headers = requestObject.headers;
@@ -21,7 +21,7 @@ const getAccountData = async (functionContext, requestObject) => {
   }
 
   const exists = await recordExist(accountType, accountId);
-  return exists ? "some data" : null;
+  return exists;
 };
 
 module.exports = async function(context, req) {
@@ -37,7 +37,7 @@ module.exports = async function(context, req) {
         message: "Unable to authenticate request."
       }
     };
-    context.done();
+    // context.done();
   }
 
   if (auth0Id === undefined) {
@@ -49,20 +49,33 @@ module.exports = async function(context, req) {
         message: "Missing Auth0 user/hacker ID in in request."
       }
     };
-    context.done();
+    // context.done();
   }
 
   if (req.method === "GET") {
     try {
       context.log("------------------------------------------------");
-      context.res = await getAccountData(context, req);
+      const data = await getAccountData(context, req);
+      context.res = {
+        body: JSON.stringify(data),
+        status: 200
+      }
       context.done();
     } catch {
-      context.res = "fuck";
+      context.res = {
+        body: "fuck",
+        status: 400
+      }
     }
   }
 
   if (req.method === "POST") {
-    // context.res = getAccountData(context, req);
+    try{
+
+    }catch{
+      context.res = {
+        body: "invalid post request"
+      }
+    }
   }
 };
