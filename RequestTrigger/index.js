@@ -1,7 +1,32 @@
 const authenticateApiKey = require("./middleware/authentication");
+const { dbConnection, recordExist } = require("./database");
+
+const getAuth0IdFromRequest = requestObject => {
+  const headers = requestObject.headers;
+  const queryParameters = requestObject.query;
+  return headers.auth0Id || queryParameters.auth0Id;
+};
+
+const getAccountData = async (functionContext, requestObject) => {
+  const queryParameters = requestObject.query;
+  const accountType = queryParameters.accountType;
+  const accountId = queryParameters.accountId;
+
+  if (accountType === undefined) {
+    return null;
+  }
+
+  if (accountId === undefined) {
+    return null;
+  }
+
+  const exists = await recordExist(accountType, accountId);
+  return exists ? "some data" : null;
+};
 
 module.exports = async function(context, req) {
   const isAuthenticated = authenticateApiKey(context, req);
+  const auth0Id = getAuth0IdFromRequest(req);
 
   if (isAuthenticated === false) {
     context.res = {
@@ -9,37 +34,35 @@ module.exports = async function(context, req) {
       body: {
         error: true,
         status: 401,
-        errorMessage: "Unable to authenticate request."
+        message: "Unable to authenticate request."
+      }
+    };
+    context.done();
+  }
+
+  if (auth0Id === undefined) {
+    context.res = {
+      status: 400,
+      body: {
+        status: 400,
+        error: true,
+        message: "Missing Auth0 user/hacker ID in in request."
       }
     };
     context.done();
   }
 
   if (req.method === "GET") {
-    context.res = {
-      status: 200,
-      body: {
-        error: false,
-        status: 200,
-        message: "hacker data successfully",
-        count: 1,
-        results: [
-          {
-            firstName: "Hank",
-            lastName: "Turley",
-            email: "HankT@ucsc.edu",
-            age: 33,
-            school: "University of Califonia, Santa Cruz",
-            major: "Turkey Sutdies",
-            github: "https://github.com/hank",
-            transport: false,
-            parking: false,
-            checkedIn: false
-          }
-        ]
-      }
-    };
+    try {
+      context.log("------------------------------------------------");
+      context.res = await getAccountData(context, req);
+      context.done();
+    } catch {
+      context.res = "fuck";
+    }
   }
 
-  context.log.info(JSON.stringify(req, null, 2));
+  if (req.method === "POST") {
+    // context.res = getAccountData(context, req);
+  }
 };
