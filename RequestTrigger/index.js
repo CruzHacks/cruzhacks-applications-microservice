@@ -1,16 +1,45 @@
-module.exports = async function (context, req) {
-    context.log('JavaScript HTTP trigger function processed a request.');
+const authenticateApiKey = require("./middleware/authentication");
 
-    if (req.query.name || (req.body && req.body.name)) {
-        context.res = {
-            // status: 200, /* Defaults to 200 */
-            body: "Hello " + (req.query.name || req.body.name)
-        };
-    }
-    else {
-        context.res = {
-            status: 400,
-            body: "Please pass a name on the query string or in the request body"
-        };
-    }
+module.exports = async function(context, req) {
+  const isAuthenticated = authenticateApiKey(context, req);
+
+  if (isAuthenticated === false) {
+    context.res = {
+      status: 401,
+      body: {
+        error: true,
+        status: 401,
+        errorMessage: "Unable to authenticate request."
+      }
+    };
+    context.done();
+  }
+
+  if (req.method === "GET") {
+    context.res = {
+      status: 200,
+      body: {
+        error: false,
+        status: 200,
+        message: "hacker data successfully",
+        count: 1,
+        results: [
+          {
+            firstName: "Hank",
+            lastName: "Turley",
+            email: "HankT@ucsc.edu",
+            age: 33,
+            school: "University of Califonia, Santa Cruz",
+            major: "Turkey Sutdies",
+            github: "https://github.com/hank",
+            transport: false,
+            parking: false,
+            checkedIn: false
+          }
+        ]
+      }
+    };
+  }
+
+  context.log.info(JSON.stringify(req, null, 2));
 };
