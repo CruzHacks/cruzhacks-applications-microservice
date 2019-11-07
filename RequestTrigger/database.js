@@ -22,23 +22,15 @@ const dummyHackerData = {
   }
 };
 
-const db = require("knex")({
-  client: "pg",
-  connection: {
-    host: process.env.DB_HOST,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_USER,
-    port: process.env.DB_PORT
-  }
-});
+const db = require('./db');
 
 const recordExist = async (accountType, accountId) => {
   // Since req.query.type is singular, we add an s to make it plural (and to conform to the table names)
-
+  
   const tableName = `${accountType}s`;
+  console.log(tableName + " " + accountId)
   const doesExist = await db(tableName)
-    .where("auth0ID", accountId)
+    .where('authoid', accountId)
     .then(exist => {
       return exist.length !== 0;
     })
@@ -46,7 +38,7 @@ const recordExist = async (accountType, accountId) => {
       console.log(err);
       throw err;
     });
-  console.log(doesExist);
+  // console.log(doesExist);
   return doesExist;
 };
 
