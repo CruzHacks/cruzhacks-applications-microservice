@@ -53,5 +53,13 @@ describe("Unit tests for account validation middleware", () => {
         expect(response).toBeFalsy();
       });
     });
+
+    test("should return promise rejection when axios rejects the request", async () => {
+      mockAxios.get.mockImplementationOnce(() => {
+        Promise.reject({ message: "Unable to connect to the auth0 API" });
+      });
+
+      await expect(validateAuth0Email).rejects;
+    });
   });
 });
