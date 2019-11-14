@@ -61,7 +61,10 @@ module.exports = async function(context, req) {
         status: 200
       }
     } catch {
-      context.res = "fuck";
+      context.res = {
+        body: `Unable to obtain information from ${req.body.email}`,
+        status: 400
+      };
     }
   }
 
