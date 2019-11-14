@@ -55,8 +55,11 @@ module.exports = async function(context, req) {
   if (req.method === "GET") {
     try {
       context.log("------------------------------------------------");
-      context.res = await getAccountData(context, req);
-      context.done();
+      const data = await getAccountData(context, req);
+      context.res = {
+        body: JSON.stringify(data),
+        status: 200
+      }
     } catch {
       context.res = "fuck";
     }
