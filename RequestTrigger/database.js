@@ -38,15 +38,14 @@ const recordExist = async (accountType, accountId) => {
 
   const tableName = `${accountType}s`;
   const doesExist = await db(tableName)
-    .where("auth0ID", accountId)
+    .where("authoid", accountId)
     .then(exist => {
-      return exist.length !== 0;
+      return exist;
     })
     .catch(err => {
       console.log(err);
       throw err;
     });
-  console.log(doesExist);
   return doesExist;
 };
 

@@ -21,7 +21,7 @@ const getAccountData = async (functionContext, requestObject) => {
   }
 
   const exists = await recordExist(accountType, accountId);
-  return exists ? "some data" : null;
+  return exists;
 };
 
 module.exports = async function(context, req) {
@@ -37,7 +37,7 @@ module.exports = async function(context, req) {
         message: "Unable to authenticate request."
       }
     };
-    context.done();
+    // context.done();
   }
 
   if (auth0Id === undefined) {
@@ -49,7 +49,7 @@ module.exports = async function(context, req) {
         message: "Missing Auth0 user/hacker ID in in request."
       }
     };
-    context.done();
+    // context.done();
   }
 
   if (req.method === "GET") {
@@ -60,6 +60,7 @@ module.exports = async function(context, req) {
         body: JSON.stringify(data),
         status: 200
       }
+      // context.done(); 
     } catch {
       context.res = {
         body: `Unable to obtain information from ${req.body.email}`,
