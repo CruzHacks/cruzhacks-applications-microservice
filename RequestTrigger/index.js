@@ -1,11 +1,7 @@
 const authenticateApiKey = require("./middleware/authentication");
-const { dbConnection, recordExist } = require("./database");
+const { recordExist } = require("./database");
+const { getAuth0IdFromRequest } = require('./obtainAuthOID')
 
-const getAuth0IdFromRequest = requestObject => {
-  const headers = requestObject.headers;
-  const queryParameters = requestObject.query;
-  return headers.auth0Id || queryParameters.accountId;
-};
 
 const getAccountData = async (functionContext, requestObject) => {
   const queryParameters = requestObject.query;
