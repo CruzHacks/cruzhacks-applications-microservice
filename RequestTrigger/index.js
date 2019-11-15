@@ -16,9 +16,8 @@ module.exports = async function(context, req) {
         message: "Unable to authenticate request."
       }
     };
-  }
-
-  if (auth0Id === undefined) {
+    context.done()
+  }else if (auth0Id === undefined) {
     context.res = {
       status: 400,
       body: {
@@ -27,6 +26,7 @@ module.exports = async function(context, req) {
         message: "Missing Auth0 user/hacker ID in in request."
       }
     };
+    context.done();
   }
 
   if (req.method === "GET") {
