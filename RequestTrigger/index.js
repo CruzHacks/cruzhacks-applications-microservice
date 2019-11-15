@@ -4,7 +4,7 @@ const { dbConnection, recordExist } = require("./database");
 const getAuth0IdFromRequest = requestObject => {
   const headers = requestObject.headers;
   const queryParameters = requestObject.query;
-  return headers.auth0Id || queryParameters.auth0Id;
+  return headers.auth0Id || queryParameters.accountId;
 };
 
 const getAccountData = async (functionContext, requestObject) => {
@@ -37,7 +37,6 @@ module.exports = async function(context, req) {
         message: "Unable to authenticate request."
       }
     };
-    // context.done();
   }
 
   if (auth0Id === undefined) {
@@ -49,21 +48,29 @@ module.exports = async function(context, req) {
         message: "Missing Auth0 user/hacker ID in in request."
       }
     };
-    // context.done();
   }
 
   if (req.method === "GET") {
     try {
       context.log("------------------------------------------------");
       const data = await getAccountData(context, req);
-      context.res = {
-        body: JSON.stringify(data),
-        status: 200
+      var bodyOfResponse; 
+      var statusCode; 
+      if(data.length === 0){
+        bodyOfResponse = `Could not obtain information on person with accountID ${req.query.accountId}`
+        statusCode = 404
+      }else{
+        bodyOfResponse = `Succesfully obtained information of ${auth0Id}\n\n` + JSON.stringify(data)
+        statusCode = 200
       }
-      // context.done(); 
+
+      context.res = {
+        body: bodyOfResponse, 
+        status: statusCode
+      }
     } catch {
       context.res = {
-        body: `Unable to obtain information from ${req.body.email}`,
+        body: `Unable to obtain information for authoid ${req.query.accountId}`,
         status: 400
       };
     }
