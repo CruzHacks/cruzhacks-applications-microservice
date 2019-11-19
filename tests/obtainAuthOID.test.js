@@ -10,7 +10,7 @@ describe("AuthOID Authentication Unit Test", () => {
             host: "localhost:7071",
             "user-agent": "insomnia/7.0.3",
             authentication: "testKEY",
-            auth0Id: "abc"
+            auth0id: "abc"
           },
           query: {
             accountId: "123"
@@ -26,7 +26,7 @@ describe("AuthOID Authentication Unit Test", () => {
             host: "localhost:7071",
             "user-agent": "insomnia/7.0.3",
             authentication: "testKEY",
-            auth0Id: "123abc"
+            auth0id: "123abc"
           },
           query: {
             accountId: "123abc"
