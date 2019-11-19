@@ -14,7 +14,7 @@ describe("Unit Test for Getting Account Data", () => {
               auth0Id: "abc"
             },
             query: {
-              accountId: "123"
+              accountEmail: "123"
             }
           };
           getAccountData(mockContext, requestHeadersMock).then(response => {

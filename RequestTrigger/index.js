@@ -35,11 +35,11 @@ module.exports = async function(context, req) {
       var bodyOfResponse;
       var statusCode;
       if (data.length === 0) {
-        bodyOfResponse = `Could not obtain information on person with accountID ${req.query.accountId}`;
+        bodyOfResponse = `Could not obtain information on person with email ${req.query.accountEmail}`;
         statusCode = 404;
       } else {
         bodyOfResponse =
-          `Succesfully obtained information of ${auth0Id}\n\n` +
+          `Succesfully obtained information of ${req.query.accountEmail}\n\n` +
           JSON.stringify(data);
         statusCode = 200;
       }
@@ -50,7 +50,7 @@ module.exports = async function(context, req) {
       };
     } catch(error) {
       context.res = {
-        body: `Unable to obtain information for authoid ${req.query.accountId}`,
+        body: `Unable to obtain information for authoid ${req.query.accountEmail}`,
         status: 400
       };
     }
