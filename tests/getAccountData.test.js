@@ -4,7 +4,7 @@ const getAccountData = require('../RequestTrigger/getAccountData')
 describe("Unit Test for Getting Account Data", () => {
     mockContext = {}
 
-    test("Should return undefined for no account type in query", () => {
+    test("Should return null for no account type in query", () => {
         const requestHeadersMock = {
             headers: {
               accept: "*/*",
@@ -17,6 +17,8 @@ describe("Unit Test for Getting Account Data", () => {
               accountId: "123"
             }
           };
-          expect(getAccountData(mockContext, requestHeadersMock)).toBe()
+          getAccountData(mockContext, requestHeadersMock).then(response => {
+              expect(response).toBeNull()
+          })
     })
 })
