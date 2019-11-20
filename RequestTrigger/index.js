@@ -1,10 +1,8 @@
 const authenticateApiKey = require("./middleware/authentication");
-const { getAuth0IdFromRequest } = require("./obtainAuthOID");
 const { getAccountData } = require("./getAccountData");
 
 module.exports = async function(context, req) {
   const isAuthenticated = authenticateApiKey(context, req);
-  const auth0Id = getAuth0IdFromRequest(req);
 
   if (isAuthenticated === false) {
     context.res = {
@@ -16,42 +14,32 @@ module.exports = async function(context, req) {
       }
     };
     context.done();
-  } else if (auth0Id === undefined) {
-    context.res = {
-      status: 400,
-      body: {
-        status: 400,
-        error: true,
-        message: "Missing Auth0 user/hacker ID in in request."
-      }
-    };
-    context.done();
-  }
+  } 
 
   if (req.method === "GET") {
     try {
-      context.log("------------------------------------------------");
       const data = await getAccountData(context, req);
       var bodyOfResponse;
       var statusCode;
       if (data.length === 0) {
-        bodyOfResponse = `Could not obtain information on person with email ${req.query.accountEmail}`;
+        bodyOfResponse = data;
         statusCode = 404;
       } else {
-        bodyOfResponse =
-          `Succesfully obtained information of ${req.query.accountEmail}\n\n` +
-          JSON.stringify(data);
+        bodyOfResponse = data;
         statusCode = 200;
       }
-
       context.res = {
         body: bodyOfResponse,
         status: statusCode
       };
     } catch(error) {
       context.res = {
-        body: `Unable to obtain information for authoid ${req.query.accountEmail}`,
-        status: 400
+        status: 400,
+        body:{
+          error: true, 
+          status: 400, 
+          message: "Missing or invalid query data"
+        }
       };
     }
   }
