@@ -33,20 +33,19 @@ const db = require("knex")({
   }
 });
 
-const recordExist = async (accountType, accountId) => {
+const recordExist = async (accountType, accountEmail) => {
   // Since req.query.type is singular, we add an s to make it plural (and to conform to the table names)
 
   const tableName = `${accountType}s`;
   const doesExist = await db(tableName)
-    .where("auth0ID", accountId)
+    .where("email", accountEmail)
     .then(exist => {
-      return exist.length !== 0;
+      return exist;
     })
     .catch(err => {
       console.log(err);
       throw err;
     });
-  console.log(doesExist);
   return doesExist;
 };
 

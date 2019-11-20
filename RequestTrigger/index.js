@@ -1,32 +1,8 @@
 const authenticateApiKey = require("./middleware/authentication");
-const { dbConnection, recordExist } = require("./database");
-
-const getAuth0IdFromRequest = requestObject => {
-  const headers = requestObject.headers;
-  const queryParameters = requestObject.query;
-  return headers.auth0Id || queryParameters.auth0Id;
-};
-
-const getAccountData = async (functionContext, requestObject) => {
-  const queryParameters = requestObject.query;
-  const accountType = queryParameters.accountType;
-  const accountId = queryParameters.accountId;
-
-  if (accountType === undefined) {
-    return null;
-  }
-
-  if (accountId === undefined) {
-    return null;
-  }
-
-  const exists = await recordExist(accountType, accountId);
-  return exists ? "some data" : null;
-};
+const { getAccountData } = require("./getAccountData");
 
 module.exports = async function(context, req) {
   const isAuthenticated = authenticateApiKey(context, req);
-  const auth0Id = getAuth0IdFromRequest(req);
 
   if (isAuthenticated === false) {
     context.res = {
@@ -38,27 +14,33 @@ module.exports = async function(context, req) {
       }
     };
     context.done();
-  }
-
-  if (auth0Id === undefined) {
-    context.res = {
-      status: 400,
-      body: {
-        status: 400,
-        error: true,
-        message: "Missing Auth0 user/hacker ID in in request."
-      }
-    };
-    context.done();
-  }
+  } 
 
   if (req.method === "GET") {
     try {
-      context.log("------------------------------------------------");
-      context.res = await getAccountData(context, req);
-      context.done();
-    } catch {
-      context.res = "fuck";
+      const data = await getAccountData(context, req);
+      var bodyOfResponse;
+      var statusCode;
+      if (data.length === 0) {
+        bodyOfResponse = data;
+        statusCode = 404;
+      } else {
+        bodyOfResponse = data;
+        statusCode = 200;
+      }
+      context.res = {
+        body: bodyOfResponse,
+        status: statusCode
+      };
+    } catch(error) {
+      context.res = {
+        status: 400,
+        body:{
+          error: true, 
+          status: 400, 
+          message: "Missing or invalid query data"
+        }
+      };
     }
   }
 

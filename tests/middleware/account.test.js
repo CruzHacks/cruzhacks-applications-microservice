@@ -4,10 +4,6 @@ const mockAxios = require("axios");
 
 describe("Unit tests for account validation middleware", () => {
   describe("Auth0 Email Validation", () => {
-    test("check if env var AUTH0_MANEGEMENT_API_TOKEN set", () => {
-      expect(process.env.AUTH0_MANEGEMENT_API_TOKEN).toBeDefined();
-    });
-
     test("should return true when email exists", () => {
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
