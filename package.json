@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "eslint": "eslint .",
+    "prettier": "prettier --write .\\RequestTrigger/**/*.js .\\tests/**/*.js"
   },
   "dependencies": {
     "axios": "^0.19.0",
