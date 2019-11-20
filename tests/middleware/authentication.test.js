@@ -9,20 +9,20 @@ describe("api key authentication middleware uit tests", () => {
         accept: "*/*",
         host: "localhost:7071",
         "user-agent": "insomnia/7.0.3",
-        authentication: "testKEY"
+        authentication: "testKEY",
       },
-      query: {}
+      query: {},
     };
-    process.env["API_KEY"] = "testKEY";
+    process.env.API_KEY = "testKEY";
     expect(authenticateApiKey(contextMock, requestHeadersMock)).toBe(true);
   });
 
   test("should pass with correct query parameter", () => {
     const requestParamsMock = {
       headers: {},
-      query: { authentication: "testKEY" }
+      query: { authentication: "testKEY" },
     };
-    process.env["API_KEY"] = "testKEY";
+    process.env.API_KEY = "testKEY";
     expect(authenticateApiKey(contextMock, requestParamsMock)).toBe(true);
   });
 
@@ -32,20 +32,20 @@ describe("api key authentication middleware uit tests", () => {
         accept: "*/*",
         host: "localhost:7071",
         "user-agent": "insomnia/7.0.3",
-        authentication: "WRONG_KEY"
+        authentication: "WRONG_KEY",
       },
-      query: {}
+      query: {},
     };
-    process.env["API_KEY"] = "testKEY";
+    process.env.API_KEY = "testKEY";
     expect(authenticateApiKey(contextMock, requestHeadersMock)).toBe(false);
   });
 
   test("should not pass with incorrect query parameter", () => {
     const requestParamsMock = {
       headers: {},
-      query: { authentication: "WRONG_KEY" }
+      query: { authentication: "WRONG_KEY" },
     };
-    process.env["API_KEY"] = "testKEY";
+    process.env.API_KEY = "testKEY";
     expect(authenticateApiKey(contextMock, requestParamsMock)).toBe(false);
   });
 
@@ -55,29 +55,29 @@ describe("api key authentication middleware uit tests", () => {
         accept: "*/*",
         host: "localhost:7071",
         "user-agent": "insomnia/7.0.3",
-        authentication: "testKEY"
+        authentication: "testKEY",
       },
-      query: { authentication: "testKEY" }
+      query: { authentication: "testKEY" },
     };
-    process.env["API_KEY"] = "testKEY";
+    process.env.API_KEY = "testKEY";
     expect(authenticateApiKey(contextMock, requestParamsMock)).toBe(true);
   });
 
   test("should not pass with incorrect requets header and incorrect query parameter", () => {
     const requestParamsMock = {
       headers: {},
-      query: { authentication: "WRONG_KEY" }
+      query: { authentication: "WRONG_KEY" },
     };
-    process.env["API_KEY"] = "testKEY";
+    process.env.API_KEY = "testKEY";
     expect(authenticateApiKey(contextMock, requestParamsMock)).toBe(false);
   });
 
   test("should pass with missing api key in query params and request headers", () => {
     const requestParamsMock = {
       headers: {},
-      query: {}
+      query: {},
     };
-    process.env["API_KEY"] = "testKEY";
+    process.env.API_KEY = "testKEY";
     expect(authenticateApiKey(contextMock, requestParamsMock)).toBe(false);
   });
 });
