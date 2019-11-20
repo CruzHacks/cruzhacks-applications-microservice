@@ -17,9 +17,8 @@ const validateAuth0Email = email => {
     .then(response => {
       return response.data.length !== 0;
     })
-    .catch(error => {
-      console.error(error);
-      return Promise.reject(error.message);
+    .catch(errorMessage => {
+      return Promise.reject(new Error(errorMessage));
     });
 };
 

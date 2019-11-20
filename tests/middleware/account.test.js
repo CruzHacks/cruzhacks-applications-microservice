@@ -1,3 +1,4 @@
+/* eslint-disable prefer-promise-reject-errors */
 const mockAxios = require("axios");
 const { validateAuth0Email } = require("../../RequestTrigger/middleware/account");
 
@@ -54,11 +55,8 @@ describe("Unit tests for account validation middleware", () => {
     });
 
     test("should return promise rejection when axios rejects the request", async () => {
-      mockAxios.get.mockImplementationOnce(() => {
-        Promise.reject({ message: "Unable to connect to the auth0 API" });
-      });
-
-      await expect(validateAuth0Email).rejects;
+      mockAxios.get.mockImplementationOnce(() => Promise.reject("some error message"));
+      await expect(validateAuth0Email("kdobrien@uccsc.edu")).rejects.toThrow("some error message");
     });
   });
 });

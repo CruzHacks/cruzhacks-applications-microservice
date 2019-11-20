@@ -1,27 +1,3 @@
-const dummyHackerData = {
-  status: 200,
-  body: {
-    error: false,
-    status: 200,
-    message: "hacker data retrieved successfully",
-    count: 1,
-    results: [
-      {
-        firstName: "Hank",
-        lastName: "Turley",
-        email: "HankT@ucsc.edu",
-        age: 33,
-        school: "University of Califonia, Santa Cruz",
-        major: "Turkey Sutdies",
-        github: "https://github.com/hank",
-        transport: false,
-        parking: false,
-        checkedIn: false,
-      },
-    ],
-  },
-};
-
 const db = require("knex")({
   client: "pg",
   connection: {
@@ -43,7 +19,6 @@ const recordExist = async (accountType, accountEmail) => {
       return exist;
     })
     .catch(err => {
-      console.log(err);
       throw err;
     });
   return doesExist;
@@ -98,10 +73,10 @@ const insertRecord = async req => {
   await db(`${req.body.type}s`)
     .insert(application)
     .then(() => {
-      console.log(`${req.body.email} has been added to table ${req.body.type}s`);
+      //   console.log(`${req.body.email} has been added to table ${req.body.type}s`);
     })
     .catch(err => {
-      console.log(err);
+      //   console.log(err);
       throw err;
     });
 };
