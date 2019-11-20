@@ -5,11 +5,11 @@ const validateAuth0Email = email => {
   const requestToken = process.env.AUTH0_MANEGEMENT_API_TOKEN;
   const requestConfig = {
     headers: {
-      Authorization: `Bearer ${requestToken}`
+      Authorization: `Bearer ${requestToken}`,
     },
     params: {
-      email: email
-    }
+      email,
+    },
   };
 
   return axios

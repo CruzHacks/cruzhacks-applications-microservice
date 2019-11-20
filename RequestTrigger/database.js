@@ -16,10 +16,10 @@ const dummyHackerData = {
         github: "https://github.com/hank",
         transport: false,
         parking: false,
-        checkedIn: false
-      }
-    ]
-  }
+        checkedIn: false,
+      },
+    ],
+  },
 };
 
 const db = require("knex")({
@@ -29,8 +29,8 @@ const db = require("knex")({
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_USER,
-    port: process.env.DB_PORT
-  }
+    port: process.env.DB_PORT,
+  },
 });
 
 const recordExist = async (accountType, accountEmail) => {
@@ -50,10 +50,10 @@ const recordExist = async (accountType, accountEmail) => {
 };
 
 const insertRecord = async req => {
-  let application = {
+  const application = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    email: req.body.email
+    email: req.body.email,
   };
 
   // build fields based on application type
@@ -98,9 +98,7 @@ const insertRecord = async req => {
   await db(`${req.body.type}s`)
     .insert(application)
     .then(() => {
-      console.log(
-        `${req.body.email} has been added to table ${req.body.type}s`
-      );
+      console.log(`${req.body.email} has been added to table ${req.body.type}s`);
     })
     .catch(err => {
       console.log(err);
@@ -110,6 +108,6 @@ const insertRecord = async req => {
 
 module.exports = {
   dbConnection: db,
-  recordExist: recordExist,
-  insertRecord: insertRecord
+  recordExist,
+  insertRecord,
 };
