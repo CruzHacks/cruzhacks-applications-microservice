@@ -1,3 +1,3 @@
-module.exports =  {
-  get: jest.fn(() => Promise.resolve({ data: [{ email: "key" }] }))
+module.exports = {
+  get: jest.fn(() => Promise.resolve({ data: [{ email: "key" }] })),
 };

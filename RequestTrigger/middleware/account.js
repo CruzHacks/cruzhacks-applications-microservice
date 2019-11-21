@@ -5,11 +5,11 @@ const validateAuth0Email = email => {
   const requestToken = process.env.AUTH0_MANEGEMENT_API_TOKEN;
   const requestConfig = {
     headers: {
-      Authorization: `Bearer ${requestToken}`
+      Authorization: `Bearer ${requestToken}`,
     },
     params: {
-      email: email
-    }
+      email,
+    },
   };
 
   return axios
@@ -17,9 +17,8 @@ const validateAuth0Email = email => {
     .then(response => {
       return response.data.length !== 0;
     })
-    .catch(error => {
-      console.error(error);
-      return Promise.reject(error.message);
+    .catch(errorMessage => {
+      return Promise.reject(new Error(errorMessage));
     });
 };
 

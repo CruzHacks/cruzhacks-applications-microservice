@@ -1,7 +1,5 @@
-const authenticateApiKey = require("./middleware/authentication");
-const {getAccountData} = require("./getAccountData");
-const {validateAuth0Email} = require("./middleware/account");
-const {insertRecord} = require("./database")
+const { authenticateApiKey } = require("./middleware/authentication");
+const { getAccountData } = require("./getAccountData");
 
 module.exports = async function(context, req) {
   const isAuthenticated = authenticateApiKey(context, req);
@@ -12,17 +10,17 @@ module.exports = async function(context, req) {
       body: {
         error: true,
         status: 401,
-        message: "Unable to authenticate request."
-      }
+        message: "Unable to authenticate request.",
+      },
     };
     context.done();
-  } 
+  }
 
   if (req.method === "GET") {
     try {
       const data = await getAccountData(context, req);
-      var bodyOfResponse;
-      var statusCode;
+      let bodyOfResponse;
+      let statusCode;
       if (data.length === 0) {
         bodyOfResponse = data;
         statusCode = 404;
@@ -32,16 +30,16 @@ module.exports = async function(context, req) {
       }
       context.res = {
         body: bodyOfResponse,
-        status: statusCode
+        status: statusCode,
       };
-    } catch(error) {
+    } catch (error) {
       context.res = {
         status: 400,
-        body:{
-          error: true, 
-          status: 400, 
-          message: "Missing or invalid query data"
-        }
+        body: {
+          error: true,
+          status: 400,
+          message: "Missing or invalid query data",
+        },
       };
     }
   }
@@ -49,9 +47,9 @@ module.exports = async function(context, req) {
   if(req.method === "POST") {
     try{
       const validAuthOEmail = validateAuth0Email(req.body.email).then(response => {
-        return response === true; 
+        return response === true;
       }).catch(error => {
-        return error; 
+        return error;
       });
 
       if( validAuthOEmail != true){
@@ -63,12 +61,12 @@ module.exports = async function(context, req) {
             message: "Unable to authenticate request."
           }
         };
-        context.done(); 
+        context.done();
       }
 
-      const insert = await insertRecord(req); 
-      var bodyOfResponse; 
-      var statusCode; 
+      const insert = await insertRecord(req);
+      var bodyOfResponse;
+      var statusCode;
       if (insert.length === 0) {
         bodyOfResponse = insert;
         statusCode = 404;
@@ -80,17 +78,17 @@ module.exports = async function(context, req) {
         body: bodyOfResponse,
         status: statusCode
       };
-      context.done(); 
+      context.done();
     }catch(error){
       context.res = {
         status: 400,
         body:{
-          error: true, 
-          status: 400, 
+          error: true,
+          status: 400,
           message: "Something went wrong"
         }
       };
-      context.done(); 
+      context.done();
     }
   }
 };

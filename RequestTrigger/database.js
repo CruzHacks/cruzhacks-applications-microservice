@@ -1,27 +1,3 @@
-const dummyHackerData = {
-  status: 200,
-  body: {
-    error: false,
-    status: 200,
-    message: "hacker data retrieved successfully",
-    count: 1,
-    results: [
-      {
-        firstName: "Hank",
-        lastName: "Turley",
-        email: "HankT@ucsc.edu",
-        age: 33,
-        school: "University of Califonia, Santa Cruz",
-        major: "Turkey Sutdies",
-        github: "https://github.com/hank",
-        transport: false,
-        parking: false,
-        checkedIn: false
-      }
-    ]
-  }
-};
-
 const db = require("knex")({
   client: "pg",
   connection: {
@@ -29,8 +5,8 @@ const db = require("knex")({
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_USER,
-    port: process.env.DB_PORT
-  }
+    port: process.env.DB_PORT,
+  },
 });
 
 const recordExist = async (accountType, accountEmail) => {
@@ -43,17 +19,16 @@ const recordExist = async (accountType, accountEmail) => {
       return exist;
     })
     .catch(err => {
-      console.log(err);
       throw err;
     });
   return doesExist;
 };
 
 const insertRecord = async req => {
-  let application = {
+  const application = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    email: req.body.email
+    email: req.body.email,
   };
 
   // build fields based on application type
@@ -97,17 +72,17 @@ const insertRecord = async req => {
   }
   await db(`${req.body.type}s`)
     .insert(application)
-    .then(result => {
-      return result; 
+    .then(() => {
+      //   console.log(`${req.body.email} has been added to table ${req.body.type}s`);
     })
     .catch(err => {
-      console.log(err);
+      //   console.log(err);
       throw err;
     });
 };
 
 module.exports = {
   dbConnection: db,
-  recordExist: recordExist,
-  insertRecord: insertRecord
+  recordExist,
+  insertRecord,
 };
