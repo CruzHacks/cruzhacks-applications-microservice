@@ -34,6 +34,7 @@ const insertRecord = async req => {
   // build fields based on application type
   if (req.body.type === "hacker" || req.body.type === "mentor" || req.body.type === "volunteer") {
     application.age = req.body.age;
+    application.auth0id = req.body.auth0id;
     application.gender = req.body.gender;
     application.ethnicity = req.body.ethnicity;
     application.firstCruzHacks = req.body.firstCruzHacks;
