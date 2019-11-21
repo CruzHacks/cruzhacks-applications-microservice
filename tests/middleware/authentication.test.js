@@ -1,4 +1,4 @@
-const authenticateApiKey = require("../../RequestTrigger/middleware/authentication");
+const { authenticateApiKey } = require("../../RequestTrigger/middleware/authentication");
 
 describe("api key authentication middleware uit tests", () => {
   const contextMock = {};
