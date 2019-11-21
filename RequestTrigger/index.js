@@ -1,5 +1,7 @@
 const { authenticateApiKey } = require("./middleware/authentication");
+const { validateAuth0Email } = require("./middleware/account");
 const { getAccountData } = require("./getAccountData");
+const { insertRecord } = require("./database");
 
 module.exports = async function(context, req) {
   const isAuthenticated = authenticateApiKey(context, req);
@@ -44,29 +46,31 @@ module.exports = async function(context, req) {
     }
   }
 
-  if(req.method === "POST") {
-    try{
-      const validAuthOEmail = validateAuth0Email(req.body.email).then(response => {
-        return response === true;
-      }).catch(error => {
-        return error;
-      });
+  if (req.method === "POST") {
+    try {
+      const validAuthOEmail = validateAuth0Email(req.body.email)
+        .then(response => {
+          return response === true;
+        })
+        .catch(error => {
+          return error;
+        });
 
-      if( validAuthOEmail != true){
+      if (validAuthOEmail !== true) {
         context.res = {
           status: 500,
           body: {
             error: true,
             status: 500,
-            message: "Unable to authenticate request."
-          }
+            message: "Unable to authenticate request.",
+          },
         };
         context.done();
       }
 
       const insert = await insertRecord(req);
-      var bodyOfResponse;
-      var statusCode;
+      let bodyOfResponse;
+      let statusCode;
       if (insert.length === 0) {
         bodyOfResponse = insert;
         statusCode = 404;
@@ -76,17 +80,17 @@ module.exports = async function(context, req) {
       }
       context.res = {
         body: bodyOfResponse,
-        status: statusCode
+        status: statusCode,
       };
       context.done();
-    }catch(error){
+    } catch (error) {
       context.res = {
         status: 400,
-        body:{
+        body: {
           error: true,
           status: 400,
-          message: "Something went wrong"
-        }
+          message: "Something went wrong",
+        },
       };
       context.done();
     }
