@@ -1,4 +1,4 @@
-const {recordExist} = require('./database')
+const {recordExist} = require('./dbConnection/recordExist')
 
 const getAccountData = async (functionContext, requestObject) => {
     const queryParameters = requestObject.query;
