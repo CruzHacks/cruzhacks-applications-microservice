@@ -19,7 +19,7 @@ module.exports = async function(context, req) {
   }
 
   if (req.method === "GET") {
-    getAccountData(context, req)
+    await getAccountData(context, req)
       .then(accountData => {
         if (accountData === undefined) {
           context.res = {
