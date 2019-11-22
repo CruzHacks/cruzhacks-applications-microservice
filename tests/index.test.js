@@ -28,7 +28,7 @@ describe("unit tests for index.js driver", () => {
     };
 
     authenticateApiKey.mockImplementationOnce(() => true);
-    getAccountData.mockImplementationOnce(() => Promise.resolve([]));
+    getAccountData.mockImplementationOnce(() => Promise.resolve(undefined));
 
     await httpFunction(context, request);
     expect(context.res.status).toEqual(404);
@@ -62,6 +62,7 @@ describe("unit tests for index.js driver", () => {
     };
 
     authenticateApiKey.mockImplementationOnce(() => true);
+    getAccountData.mockImplementationOnce(() => Promise.reject());
 
     await httpFunction(context, request);
     expect(context.res.status).toEqual(400);

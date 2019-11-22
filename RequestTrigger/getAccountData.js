@@ -2,7 +2,7 @@ const { getUserDataByEmail } = require("./database");
 
 const validAccountTypes = ["hacker", "mentor", "organizer", "volunteer"];
 
-const getAccountData = async (functionContext, requestObject) => {
+const getAccountData = (functionContext, requestObject) => {
   const queryParameters = requestObject.query;
   const { accountType } = queryParameters;
   const { accountEmail } = queryParameters;
@@ -16,9 +16,7 @@ const getAccountData = async (functionContext, requestObject) => {
     return Promise.reject(new Error("Missing email in request"));
   }
 
-  return getUserDataByEmail(accountType, accountEmail).then(response => {
-    return response;
-  });
+  return getUserDataByEmail(accountType, accountEmail);
 };
 
 module.exports.getAccountData = getAccountData;
