@@ -19,31 +19,30 @@ module.exports = async function(context, req) {
   }
 
   if (req.method === "GET") {
-    try {
-      const data = await getAccountData(context, req);
-      let bodyOfResponse;
-      let statusCode;
-      if (data.length === 0) {
-        bodyOfResponse = data;
-        statusCode = 404;
-      } else {
-        bodyOfResponse = data;
-        statusCode = 200;
-      }
-      context.res = {
-        body: bodyOfResponse,
-        status: statusCode,
-      };
-    } catch (error) {
-      context.res = {
-        status: 400,
-        body: {
-          error: true,
+    getAccountData(context, req)
+      .then(accountData => {
+        if (accountData === undefined) {
+          context.res = {
+            status: 404,
+            body: [],
+          };
+        } else {
+          context.res = {
+            status: 200,
+            body: [accountData],
+          };
+        }
+      })
+      .catch(error => {
+        context.res = {
           status: 400,
-          message: "Missing or invalid query data",
-        },
-      };
-    }
+          body: {
+            error: true,
+            status: 400,
+            message: error,
+          },
+        };
+      });
   }
 
   if (req.method === "POST") {
