@@ -58,7 +58,6 @@ module.exports = async function(context, req) {
                   saved: true,
                 },
               };
-              context.log("yppppppppppppppp");
             })
             .catch(error => {
               context.res = {
