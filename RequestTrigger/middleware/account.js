@@ -42,6 +42,6 @@ const validateAuth0Email = email => {
   });
 };
 
-validateAuth0Email("kdobrien@ucsc.edu");
+// validateAuth0Email("kdobrien@ucsc.edu");
 
 module.exports.validateAuth0Email = validateAuth0Email;

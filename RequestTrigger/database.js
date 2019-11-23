@@ -30,9 +30,6 @@ const insertHackerApplication = (accountType, requestBody) => {
   return knex(`${accountType}s`).insert(requestBody);
 };
 
-// getUserDataByEmail("hacker", "slitherborough2@yale.edu");
-// insertHackerApplication("hacker", request);
-
 module.exports = {
   getUserDataByEmail,
   insertHackerApplication,
