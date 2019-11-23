@@ -46,6 +46,33 @@ module.exports = async function(context, req) {
   }
 
   if (req.method === "POST") {
+    validateAuth0Email(req.body.email)
+      .then(userExists => {
+        if (userExists !== true) {
+          context.res = {
+            status: 400,
+            body: {
+              error: true,
+              status: 400,
+              message: "User does not exist. Can't save application.",
+            },
+          };
+          context.done();
+        }
+      })
+      .catch(error => {
+        context.res = {
+          status: 500,
+          body: {
+            error: true,
+            status: 500,
+            message: error,
+          },
+        };
+      });
+  }
+
+  if (req.method === "POST") {
     try {
       const validAuthOEmail = validateAuth0Email(req.body.email)
         .then(response => {
