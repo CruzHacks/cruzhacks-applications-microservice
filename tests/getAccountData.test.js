@@ -3,12 +3,9 @@ const { getAccountData } = require("../RequestTrigger/getAccountData");
 describe("Unit Test for Getting Account Data", () => {
   const mockContext = {};
 
-  test("Should return null for no account type in query", () => {
+  test("Should return rejected promise for no account type in query", () => {
     const requestHeadersMock = {
       headers: {
-        accept: "*/*",
-        host: "localhost:7071",
-        "user-agent": "insomnia/7.0.3",
         authentication: "testKEY",
         auth0Id: "abc",
       },
@@ -16,8 +13,36 @@ describe("Unit Test for Getting Account Data", () => {
         accountEmail: "123",
       },
     };
-    return getAccountData(mockContext, requestHeadersMock).then(response => {
-      expect(response).toBeNull();
-    });
+
+    return expect(getAccountData(mockContext, requestHeadersMock)).rejects.toThrow("Invalid account type: undefined");
+  });
+
+  test("Should return rejected promise for invalid account type in query", () => {
+    const requestHeadersMock = {
+      headers: {
+        authentication: "testKEY",
+        auth0Id: "abc",
+      },
+      query: {
+        accountEmail: "123",
+        accountType: "hackerzzzz",
+      },
+    };
+
+    return expect(getAccountData(mockContext, requestHeadersMock)).rejects.toThrow("Invalid account type: hackerzzzz");
+  });
+
+  test("Should return rejected promise for missing email in query", () => {
+    const requestHeadersMock = {
+      headers: {
+        authentication: "testKEY",
+        auth0Id: "abc",
+      },
+      query: {
+        accountType: "hacker",
+      },
+    };
+
+    return expect(getAccountData(mockContext, requestHeadersMock)).rejects.toThrow("Missing email in request");
   });
 });

@@ -1,5 +1,7 @@
 const { authenticateApiKey } = require("./middleware/authentication");
+const { validateAuth0Email } = require("./middleware/account");
 const { getAccountData } = require("./getAccountData");
+const { insertHackerApplication } = require("./database");
 
 module.exports = async function(context, req) {
   const isAuthenticated = authenticateApiKey(context, req);
@@ -17,34 +19,76 @@ module.exports = async function(context, req) {
   }
 
   if (req.method === "GET") {
-    try {
-      const data = await getAccountData(context, req);
-      let bodyOfResponse;
-      let statusCode;
-      if (data.length === 0) {
-        bodyOfResponse = data;
-        statusCode = 404;
-      } else {
-        bodyOfResponse = data;
-        statusCode = 200;
-      }
-      context.res = {
-        body: bodyOfResponse,
-        status: statusCode,
-      };
-    } catch (error) {
-      context.res = {
-        status: 400,
-        body: {
-          error: true,
+    await getAccountData(context, req)
+      .then(accountData => {
+        if (accountData === undefined) {
+          context.res = {
+            status: 404,
+            body: [],
+          };
+        } else {
+          context.res = {
+            status: 200,
+            body: [accountData],
+          };
+        }
+      })
+      .catch(error => {
+        context.res = {
           status: 400,
-          message: "Missing or invalid query data",
-        },
-      };
-    }
+          body: {
+            error: true,
+            status: 400,
+            message: error,
+          },
+        };
+      });
   }
 
   if (req.method === "POST") {
-    // context.res = getAccountData(context, req);
+    await validateAuth0Email(req.body.email)
+      .then(async userExists => {
+        if (userExists) {
+          await insertHackerApplication("hacker", req.body)
+            .then(() => {
+              context.res = {
+                status: 200,
+                body: {
+                  hacker: req.body.email,
+                  saved: true,
+                },
+              };
+            })
+            .catch(error => {
+              context.res = {
+                status: 400,
+                body: {
+                  error: true,
+                  status: 400,
+                  message: error.message,
+                },
+              };
+            });
+        } else {
+          context.res = {
+            status: 400,
+            body: {
+              error: true,
+              status: 400,
+              message: "User does not exist. Can't save application.",
+            },
+          };
+        }
+      })
+      .catch(error => {
+        context.res = {
+          status: 500,
+          body: {
+            error: true,
+            status: 500,
+            message: `"Auth0": ${error.message}`,
+          },
+        };
+      });
   }
 };

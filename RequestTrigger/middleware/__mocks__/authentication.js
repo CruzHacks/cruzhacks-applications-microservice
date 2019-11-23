@@ -1,3 +1,3 @@
 module.exports = {
-  authenticateApiKey: jest.fn(),
+  authenticateApiKey: jest.fn(() => true),
 };
