@@ -1,7 +1,8 @@
 const context = require("./defaultContext");
 const { authenticateApiKey } = require("../RequestTrigger/middleware/authentication");
-const { getAccountData } = require("../RequestTrigger/getAccountData");
 const { validateAuth0Email } = require("../RequestTrigger/middleware/account");
+const { insertHackerApplication } = require("../RequestTrigger/database");
+const { getAccountData } = require("../RequestTrigger/getAccountData");
 const httpFunction = require("../RequestTrigger/index");
 
 jest.mock("../RequestTrigger/middleware/authentication");
@@ -74,22 +75,39 @@ describe("unit tests for index.js driver", () => {
   });
 
   describe("test POST", () => {
-    test("should return 400 when user doesen't exists", async () => {});
+    const request = {
+      method: "POST",
+      body: { authentication: "XXXXX", accountType: "hacker" },
+    };
 
-    test("should return 200 when the hacker application is saved", () => {});
+    test("should return 400 when user doesen't exists", async () => {
+      validateAuth0Email.mockImplementationOnce(() => Promise.resolve(false));
+
+      await httpFunction(context, request);
+      expect(context.res.status).toEqual(400);
+    });
+
+    test("should return 200 when the hacker application is saved", async () => {
+      validateAuth0Email.mockImplementationOnce(() => Promise.resolve(true));
+      insertHackerApplication.mockImplementationOnce(() => Promise.resolve());
+
+      await httpFunction(context, request);
+      expect(context.res.status).toEqual(200);
+    });
 
     test("should return 500 when the connection to Auth0 fails", async () => {
-      const request = {
-        method: "POST",
-        body: { authentication: "XXXXX", accountType: "hacker" },
-      };
-
       validateAuth0Email.mockImplementationOnce(() => Promise.reject(new Error("test")));
 
       await httpFunction(context, request);
       expect(context.res.status).toEqual(500);
     });
 
-    test("should return 400 when the application failes to save", () => {});
+    test("should return 400 when the application failes to save", async () => {
+      validateAuth0Email.mockImplementationOnce(() => Promise.resolve(true));
+      insertHackerApplication.mockImplementationOnce(() => Promise.reject(new Error("test")));
+
+      await httpFunction(context, request);
+      expect(context.res.status).toEqual(400);
+    });
   });
 });
