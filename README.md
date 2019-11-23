@@ -25,7 +25,7 @@ curl --request POST \
   "appnum": ${INT},
   "firstname": ${STRING},
   "lastname": ${STRING},
-	"phone": ${STRING},
+  "phone": ${STRING},
   "email": ${STRING},
   "authoid": ${STRING},
   "age": ${INT},
