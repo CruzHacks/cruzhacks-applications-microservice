@@ -1,5 +1,4 @@
 module.exports = {
-  dbConnection: jest.fn(),
-  recordExist: jest.fn(),
-  insertRecord: jest.fn(),
+  getUserDataByEmail: jest.fn(() => Promise.resolve({})),
+  insertHackerApplication: jest.fn(() => Promise.resolve({})),
 };
