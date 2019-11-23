@@ -47,9 +47,9 @@ module.exports = async function(context, req) {
 
   if (req.method === "POST") {
     await validateAuth0Email(req.body.email)
-      .then(userExists => {
+      .then(async userExists => {
         if (userExists) {
-          insertHackerApplication("hacker", req.body)
+          await insertHackerApplication("hacker", req.body)
             .then(() => {
               context.res = {
                 status: 200,
@@ -58,6 +58,7 @@ module.exports = async function(context, req) {
                   saved: true,
                 },
               };
+              context.log("yppppppppppppppp");
             })
             .catch(error => {
               context.res = {
