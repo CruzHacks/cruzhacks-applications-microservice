@@ -13,7 +13,7 @@ const knex = require("knex")({
 });
 
 const getUserDataByEmail = (accountType, accountEmail) => {
-  knex(`${accountType}s`)
+  return knex(`${accountType}s`)
     .where("email", accountEmail)
     .then(response => {
       return response[0];

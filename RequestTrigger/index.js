@@ -1,7 +1,7 @@
 const { authenticateApiKey } = require("./middleware/authentication");
 const { validateAuth0Email } = require("./middleware/account");
 const { getAccountData } = require("./getAccountData");
-const { insertRecord } = require("./database");
+const { insertHackerApplication } = require("./database");
 
 module.exports = async function(context, req) {
   const isAuthenticated = authenticateApiKey(context, req);
@@ -46,9 +46,30 @@ module.exports = async function(context, req) {
   }
 
   if (req.method === "POST") {
-    validateAuth0Email(req.body.email)
+    await validateAuth0Email(req.body.email)
       .then(userExists => {
-        if (userExists !== true) {
+        if (userExists) {
+          insertHackerApplication("hacker", req.body)
+            .then(() => {
+              context.res = {
+                status: 200,
+                body: {
+                  hacker: req.body.email,
+                  saved: true,
+                },
+              };
+            })
+            .catch(error => {
+              context.res = {
+                status: 400,
+                body: {
+                  error: true,
+                  status: 400,
+                  message: error,
+                },
+              };
+            });
+        } else {
           context.res = {
             status: 400,
             body: {
@@ -57,7 +78,6 @@ module.exports = async function(context, req) {
               message: "User does not exist. Can't save application.",
             },
           };
-          context.done();
         }
       })
       .catch(error => {
@@ -70,55 +90,5 @@ module.exports = async function(context, req) {
           },
         };
       });
-  }
-
-  if (req.method === "POST") {
-    try {
-      const validAuthOEmail = validateAuth0Email(req.body.email)
-        .then(response => {
-          return response === true;
-        })
-        .catch(error => {
-          return error;
-        });
-
-      if (validAuthOEmail !== true) {
-        context.res = {
-          status: 500,
-          body: {
-            error: true,
-            status: 500,
-            message: "Unable to authenticate request.",
-          },
-        };
-        context.done();
-      }
-
-      const insert = await insertRecord(req);
-      let bodyOfResponse;
-      let statusCode;
-      if (insert.length === 0) {
-        bodyOfResponse = insert;
-        statusCode = 404;
-      } else {
-        bodyOfResponse = insert;
-        statusCode = 200;
-      }
-      context.res = {
-        body: bodyOfResponse,
-        status: statusCode,
-      };
-      context.done();
-    } catch (error) {
-      context.res = {
-        status: 400,
-        body: {
-          error: true,
-          status: 400,
-          message: "Something went wrong",
-        },
-      };
-      context.done();
-    }
   }
 };
