@@ -22,7 +22,6 @@ curl --request POST \
   --header 'authentication: ${API_KEY}' \
   --header 'content-type: application/json' \
   --data '{
-  "appnum": ${INT},
   "firstname": ${STRING},
   "lastname": ${STRING},
   "phone": ${STRING},
