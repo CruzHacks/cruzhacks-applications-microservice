@@ -67,7 +67,7 @@ describe("unit tests for index.js driver", () => {
         headers: {},
       };
 
-      getAccountData.mockImplementationOnce(() => Promise.reject());
+      getAccountData.mockImplementationOnce(() => Promise.reject(new Error("Something went wrong")));
 
       await httpFunction(context, request);
       expect(context.res.status).toEqual(400);

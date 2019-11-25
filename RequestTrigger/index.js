@@ -39,7 +39,7 @@ module.exports = async function(context, req) {
           body: {
             error: true,
             status: 400,
-            message: error,
+            message: error.message,
           },
         };
       });
