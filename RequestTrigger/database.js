@@ -17,7 +17,7 @@ const getUserDataByEmail = (accountType, accountEmail) => {
     .where("email", accountEmail)
     .then(response => {
       return response[0];
-    })
+    });
 };
 
 const insertHackerApplication = (accountType, requestBody) => {
