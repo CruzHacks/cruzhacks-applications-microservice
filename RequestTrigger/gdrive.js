@@ -99,7 +99,7 @@ const authorize = (creds, callback, filename = "") => {
   const { clientSecret, clientId, redirectUris } = creds.installed;
   const oAuth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUris[0]);
   oAuth2Client.setCredentials(token);
-  return callback(oAuth2Client, filename);
+  return filename ? callback(oAuth2Client, filename) : callback(oAuth2Client);
 };
 
 const driveListFiles = () => {
