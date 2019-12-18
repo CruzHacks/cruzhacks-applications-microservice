@@ -20,6 +20,7 @@ module.exports = async function(context, req) {
       Bucket: BUCKET_NAME,
       Key: key,
       Body: resume.data,
+      ServerSideEncryption: "AES256",
     };
 
     s3.upload(params, function(err, data) {
