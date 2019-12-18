@@ -37,7 +37,11 @@ module.exports = async function(context, req) {
     context.error(`ERROR : Invalid Request`);
     context.res = {
       status: 400,
-      body: "Please pass the email and resume as a form data object in the request body",
+      body: {
+        error: true,
+        status: 400,
+        message: "Please pass the email and resume as a form data object in the request body",
+      },
     };
   }
   context.done();
