@@ -11,12 +11,20 @@ const { insertHackerApplication } = require("./database");
 const applicationInsightsKey = process.env.APPINSIGHTS_INSTRUMENTATIONKEY;
 appInsights.setup(applicationInsightsKey);
 appInsights.start();
+const applicationInsightsClient = appInsights.defaultClient;
 
 module.exports = async function(context, req) {
+  applicationInsightsClient.trackNodeHttpRequest({ request: req, response: context.res });
+  context.log(req);
+
+  applicationInsightsClient.commonProperties = {
+    test: JSON.stringify(context.res.body),
+  };
+
   const isAuthenticated = authenticateApiKey(context, req);
 
   if (isAuthenticated === false) {
-    context.res = {
+    const response = {
       status: 401,
       body: {
         error: true,
@@ -24,6 +32,8 @@ module.exports = async function(context, req) {
         message: "Unable to authenticate request.",
       },
     };
+    context.log(JSON.stringify(response.body, null, 2));
+    context.res = response;
     context.done();
   }
 
@@ -31,19 +41,23 @@ module.exports = async function(context, req) {
     await getAccountData(context, req)
       .then(accountData => {
         if (accountData === undefined) {
-          context.res = {
+          const response = {
             status: 404,
             body: [],
           };
+          context.log.error(JSON.stringify(response.body, null, 2));
+          context.res = response;
         } else {
-          context.res = {
+          const response = {
             status: 200,
             body: [accountData],
           };
+          context.log(JSON.stringify(response.body, null, 2));
+          context.res = response;
         }
       })
       .catch(error => {
-        context.res = {
+        const response = {
           status: 400,
           body: {
             error: true,
@@ -51,6 +65,8 @@ module.exports = async function(context, req) {
             message: error.message,
           },
         };
+        context.log.error(JSON.stringify(response.body, null, 2));
+        context.res = response;
       });
   }
 
