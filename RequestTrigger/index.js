@@ -26,7 +26,7 @@ module.exports = async function(context, req) {
         message: "Unable to authenticate request.",
       },
     };
-    context.log(JSON.stringify(response.body, null, 2));
+    context.log.error(JSON.stringify(response.body, null, 2));
     context.res = response;
     context.done();
   }
@@ -39,7 +39,7 @@ module.exports = async function(context, req) {
             status: 404,
             body: [],
           };
-          context.log.error(JSON.stringify(response.body, null, 2));
+          context.log(JSON.stringify(response.body, null, 2));
           context.res = response;
         } else {
           const response = {
@@ -70,16 +70,18 @@ module.exports = async function(context, req) {
         if (userExists) {
           await insertHackerApplication("hacker", req.body)
             .then(() => {
-              context.res = {
+              const response = {
                 status: 200,
                 body: {
                   hacker: req.body.email,
                   saved: true,
                 },
               };
+              context.log(JSON.stringify(response.body, null, 2));
+              context.res = response;
             })
             .catch(error => {
-              context.res = {
+              const response = {
                 status: 400,
                 body: {
                   error: true,
@@ -87,9 +89,11 @@ module.exports = async function(context, req) {
                   message: error.message,
                 },
               };
+              context.log.error(JSON.stringify(response.body, null, 2));
+              context.res = response;
             });
         } else {
-          context.res = {
+          const response = {
             status: 400,
             body: {
               error: true,
@@ -97,10 +101,12 @@ module.exports = async function(context, req) {
               message: "User does not exist. Can't save application.",
             },
           };
+          context.log.error(JSON.stringify(response.body, null, 2));
+          context.res = response;
         }
       })
       .catch(error => {
-        context.res = {
+        const response = {
           status: 500,
           body: {
             error: true,
@@ -108,6 +114,8 @@ module.exports = async function(context, req) {
             message: `"Auth0": ${error.message}`,
           },
         };
+        context.log.error(JSON.stringify(response.body, null, 2));
+        context.res = response;
       });
   }
 };
