@@ -1,7 +1,16 @@
+// NPM Packages
+const appInsights = require("applicationinsights");
+
+// Local Modules
 const { authenticateApiKey } = require("./middleware/authentication");
 const { validateAuth0Email } = require("./middleware/account");
 const { getAccountData } = require("./getAccountData");
 const { insertHackerApplication } = require("./database");
+
+// Initialize Azure Application Insights
+const applicationInsightsKey = process.env.APPINSIGHTS_INSTRUMENTATIONKEY;
+appInsights.setup(applicationInsightsKey);
+appInsights.start();
 
 module.exports = async function(context, req) {
   const isAuthenticated = authenticateApiKey(context, req);
