@@ -8,18 +8,12 @@ const { getAccountData } = require("./getAccountData");
 const { insertHackerApplication } = require("./database");
 
 // Initialize Azure Application Insights
-const applicationInsightsKey = process.env.APPINSIGHTS_INSTRUMENTATIONKEY;
-appInsights.setup(applicationInsightsKey);
-appInsights.start();
+appInsights.setup(process.env.APPINSIGHTS_INSTRUMENTATIONKEY).start();
 const applicationInsightsClient = appInsights.defaultClient;
 
 module.exports = async function(context, req) {
   applicationInsightsClient.trackNodeHttpRequest({ request: req, response: context.res });
   context.log(req);
-
-  applicationInsightsClient.commonProperties = {
-    test: JSON.stringify(context.res.body),
-  };
 
   const isAuthenticated = authenticateApiKey(context, req);
 
