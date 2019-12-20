@@ -26,7 +26,7 @@ module.exports = async function(context, req) {
         message: "Unable to authenticate request.",
       },
     };
-    context.log.error(JSON.stringify(response.body, null, 2));
+    context.log(JSON.stringify(response.body, null, 2));
     context.res = response;
     context.done();
   }
@@ -59,7 +59,7 @@ module.exports = async function(context, req) {
             message: error.message,
           },
         };
-        context.log.error(JSON.stringify(response.body, null, 2));
+        context.log(JSON.stringify(response.body, null, 2));
         context.res = response;
       });
   }
@@ -89,7 +89,7 @@ module.exports = async function(context, req) {
                   message: error.message,
                 },
               };
-              context.log.error(JSON.stringify(response.body, null, 2));
+              context.log(JSON.stringify(response.body, null, 2));
               context.res = response;
             });
         } else {
@@ -101,7 +101,7 @@ module.exports = async function(context, req) {
               message: "User does not exist. Can't save application.",
             },
           };
-          context.log.error(JSON.stringify(response.body, null, 2));
+          context.log(JSON.stringify(response.body, null, 2));
           context.res = response;
         }
       })
@@ -114,7 +114,7 @@ module.exports = async function(context, req) {
             message: `"Auth0": ${error.message}`,
           },
         };
-        context.log.error(JSON.stringify(response.body, null, 2));
+        context.log(JSON.stringify(response.body, null, 2));
         context.res = response;
       });
   }
