@@ -1,9 +1,9 @@
-const context = require("./defaultContext");
 const { authenticateApiKey } = require("../../ResumeUpload/middleware/authentication");
 const { parseFormData } = require("../../ResumeUpload/parseFormData");
 const { validateFormData } = require("../../ResumeUpload/validateFormData");
 const { uploadResume } = require("../../ResumeUpload/uploadResume");
 const httpFunction = require("../../ResumeUpload/index");
+const context = require("./context");
 
 jest.mock("../../ResumeUpload/middleware/authentication");
 jest.mock("../../ResumeUpload/parseFormData");
