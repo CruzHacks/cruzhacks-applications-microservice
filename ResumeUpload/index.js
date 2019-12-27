@@ -25,13 +25,13 @@ module.exports = async function(context, req) {
         return result;
       })
       .catch(error => {
-        context.log.error(`Invalid Request : ${error}`);
+        context.log.error(`Invalid Request: ${error.message}`);
         context.res = {
           status: 400,
           body: {
             error: true,
             status: 400,
-            message: `Invalid Request : ${error.message}`,
+            message: `Invalid Request: ${error.message}`,
           },
         };
         context.done();
@@ -46,19 +46,19 @@ module.exports = async function(context, req) {
             body: {
               error: false,
               status: 200,
-              message: `Success : The file was uploaded successfully : ${result.Location}`,
+              message: `Success: The file was uploaded successfully: ${result.Location}`,
             },
           };
           context.done();
         })
         .catch(error => {
-          context.log.error(`ERROR : ${error}`);
+          context.log.error(`Error occured during upload to S3: ${error}`);
           context.res = {
             status: 500,
             body: {
               error: true,
               status: 500,
-              message: `Error : An error occured when uploading the file to S3 : ${error}`,
+              message: `Error occured during upload to S3: ${error}`,
             },
           };
           context.done();

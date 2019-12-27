@@ -1,26 +1,21 @@
 const validateFormData = formData => {
   const formDataLength = formData.length;
+  const validEntryCount = 2;
 
-  if (formDataLength !== 2) {
-    return Promise.reject(
-      new Error(`Form data entries of {${formDataLength}} does not meet number of expected entries {2}`),
-    );
+  if (formDataLength !== validEntryCount) {
+    return Promise.reject(new Error(`Invalid form entry count of {${formDataLength}}, expected {${validEntryCount}}`));
   }
 
   const resume = formData[0].name === "resume" ? formData[0] : formData[1];
   const { filename } = resume;
 
   if (filename === "") {
-    return Promise.reject(new Error(`Form data for resume does not contain a filename`));
+    return Promise.reject(new Error(`Invalid filename for resume, can not be an empty string`));
   }
 
   const validDataType = "application/pdf";
   if (resume.type !== validDataType) {
-    return Promise.reject(
-      new Error(
-        `Form data for resume is an invalid type of {${resume.type}}, please pass a file of the {${validDataType}} data type`,
-      ),
-    );
+    return Promise.reject(new Error(`Invalid form data type {${resume.type}}, expected {${validDataType}}`));
   }
 
   const email = formData[0].name === "email" ? formData[0] : formData[1];
