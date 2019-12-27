@@ -2,7 +2,7 @@
 const appInsights = require("applicationinsights");
 
 // Local Modules
-const { authenticateApiKey } = require("./middleware/authentication");
+const { authenticateApiKey } = require("../shared/middleware/authentication");
 const { validateAuth0Email } = require("./middleware/account");
 const { getAccountData } = require("./getAccountData");
 const { insertHackerApplication } = require("./database");

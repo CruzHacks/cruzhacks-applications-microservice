@@ -1,6 +1,6 @@
 const { validateFormData } = require("../../ResumeUpload/validateFormData");
 
-describe("[Resume Upload] Unit Test for validateFormData.js", () => {
+describe("[Resume Upload] Unit Tests for request body validation, validateFormData.js", () => {
   test("Should reject upon invalid number of form data objects", () => {
     const mock = [{}];
     return expect(validateFormData(mock)).rejects.toThrow(

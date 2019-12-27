@@ -1,4 +1,4 @@
-const { getAuth0IdFromRequest } = require("../RequestTrigger/obtainAuthOID");
+const { getAuth0IdFromRequest } = require("../../RequestTrigger/obtainAuthOID");
 
 describe("AuthOID Authentication Unit Test", () => {
   test("Should be undefined if authOID in header is not the same as accountID in query", () => {

@@ -1,14 +1,14 @@
-const { authenticateApiKey } = require("../RequestTrigger/middleware/authentication");
-const { validateAuth0Email } = require("../RequestTrigger/middleware/account");
-const { insertHackerApplication } = require("../RequestTrigger/database");
-const { getAccountData } = require("../RequestTrigger/getAccountData");
-const httpFunction = require("../RequestTrigger/index");
+const { authenticateApiKey } = require("../../shared/middleware/authentication");
+const { validateAuth0Email } = require("../../RequestTrigger/middleware/account");
+const { insertHackerApplication } = require("../../RequestTrigger/database");
+const { getAccountData } = require("../../RequestTrigger/getAccountData");
+const httpFunction = require("../../RequestTrigger/index");
 const context = require("./context");
 
-jest.mock("../RequestTrigger/middleware/authentication");
-jest.mock("../RequestTrigger/middleware/account");
-jest.mock("../RequestTrigger/getAccountData");
-jest.mock("../RequestTrigger/database");
+jest.mock("../../shared/middleware/authentication");
+jest.mock("../../RequestTrigger/middleware/account");
+jest.mock("../../RequestTrigger/getAccountData");
+jest.mock("../../RequestTrigger/database");
 jest.mock("./context");
 
 describe("unit tests for index.js driver", () => {

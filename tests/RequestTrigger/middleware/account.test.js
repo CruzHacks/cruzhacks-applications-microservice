@@ -1,6 +1,6 @@
 /* eslint-disable prefer-promise-reject-errors */
 const mockAxios = require("axios");
-const { validateAuth0Email } = require("../../RequestTrigger/middleware/account");
+const { validateAuth0Email } = require("../../../RequestTrigger/middleware/account");
 
 describe("Unit tests for account validation middleware", () => {
   describe("Auth0 Email Validation", () => {

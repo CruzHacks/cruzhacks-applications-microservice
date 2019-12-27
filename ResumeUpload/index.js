@@ -1,4 +1,4 @@
-const { authenticateApiKey } = require("./middleware/authentication");
+const { authenticateApiKey } = require("../shared/middleware/authentication");
 const { validateFormData } = require("./validateFormData");
 const { parseFormData } = require("./parseFormData");
 const { uploadResume } = require("./uploadResume");

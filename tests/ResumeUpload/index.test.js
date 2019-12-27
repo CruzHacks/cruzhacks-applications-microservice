@@ -1,16 +1,17 @@
-const { authenticateApiKey } = require("../../ResumeUpload/middleware/authentication");
+const { authenticateApiKey } = require("../../shared/middleware/authentication");
 const { parseFormData } = require("../../ResumeUpload/parseFormData");
 const { validateFormData } = require("../../ResumeUpload/validateFormData");
 const { uploadResume } = require("../../ResumeUpload/uploadResume");
 const httpFunction = require("../../ResumeUpload/index");
 const context = require("./context");
 
-jest.mock("../../ResumeUpload/middleware/authentication");
+jest.mock("../../shared/middleware/authentication");
 jest.mock("../../ResumeUpload/parseFormData");
 jest.mock("../../ResumeUpload/validateFormData");
 jest.mock("../../ResumeUpload/uploadResume");
+jest.mock("./context");
 
-describe("[Resume Upload] Unit tests for index.js driver", () => {
+describe("[Resume Upload] Unit tests for function driver, index.js", () => {
   describe("test api key auth", () => {
     test("should return 401 the user doesen't pass authentication", async () => {
       const request = {
