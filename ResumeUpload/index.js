@@ -1,48 +1,69 @@
-const parser = require("multipart-formdata");
+const { authenticateApiKey } = require("./middleware/authentication");
+const { validateFormData } = require("./validateFormData");
+const { parseFormData } = require("./parseFormData");
 const { uploadResume } = require("./uploadResume");
 
-const parseFormData = req => {
-  const boundary = parser.getBoundary(req.headers["content-type"]);
-  const parseBody = parser.parse(req.body, boundary);
-
-  return {
-    resume: parseBody[0],
-    email: parseBody[1],
-  };
-};
-
 module.exports = async function(context, req) {
-  const { resume, email } = parseFormData(req);
+  const isAuthenticated = authenticateApiKey(context, req);
 
-  if (email && resume) {
-    try {
-      const result = await uploadResume(resume, email);
-      context.log(`SUCCESS : ${result}`);
-      context.res = {
-        status: 200,
-        body: `The file was uploaded successfully : ${result.Location}`,
-      };
-    } catch (error) {
-      context.error(`ERROR : ${error}`);
-      context.res = {
-        status: 500,
-        body: {
-          error: true,
-          status: 500,
-          message: `An error occured when uploading the file to S3 : ${error}`,
-        },
-      };
-    }
-  } else {
-    context.error(`ERROR : Invalid Request`);
+  if (isAuthenticated === false) {
     context.res = {
-      status: 400,
+      status: 401,
       body: {
         error: true,
-        status: 400,
-        message: "Please pass the email and resume as a form data object in the request body",
+        status: 401,
+        message: "Unable to authenticate request.",
       },
     };
+    context.done();
   }
-  context.done();
+
+  if (req.method === "POST") {
+    const parsedData = parseFormData(req);
+    const { resume, email } = await validateFormData(parsedData)
+      .then(result => {
+        return result;
+      })
+      .catch(error => {
+        context.log.error(`Invalid Request : ${error}`);
+        context.res = {
+          status: 400,
+          body: {
+            error: true,
+            status: 400,
+            message: `Invalid Request : ${error.message}`,
+          },
+        };
+        context.done();
+      });
+
+    if (resume && email) {
+      await uploadResume(resume, email)
+        .then(result => {
+          context.log(`SUCCESS : ${result}`);
+          context.res = {
+            status: 200,
+            body: {
+              error: false,
+              status: 200,
+              message: `The file was uploaded successfully : ${result.Location}`,
+            },
+          };
+          context.done();
+        })
+        .catch(error => {
+          context.log.error(`ERROR : ${error}`);
+          context.res = {
+            status: 500,
+            body: {
+              error: true,
+              status: 500,
+              message: `An error occured when uploading the file to S3 : ${error}`,
+            },
+          };
+          context.done();
+        });
+    }
+    context.done();
+  }
 };
