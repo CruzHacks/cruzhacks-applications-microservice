@@ -16,7 +16,7 @@ describe("[Resume Upload] Unit Test for validateFormData.js", () => {
   test("Should reject upon invalid content type for resume form data", () => {
     const mock = [{ name: "resume", filename: "mock.pdf", type: "application/javascript" }, { name: "email" }];
     return expect(validateFormData(mock)).rejects.toThrow(
-      `Form data for resume is {${mock[0].type}}, please pass an {application/pdf} data type`,
+      `Form data for resume is an invalid type of {${mock[0].type}}, please pass a file of the {application/pdf} data type`,
     );
   });
 });

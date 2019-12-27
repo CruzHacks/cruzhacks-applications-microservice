@@ -36,9 +36,7 @@ describe("[Resume Upload] Unit tests for index.js driver", () => {
         return [{}];
       });
 
-      validateFormData.mockImplementationOnce(() => {
-        Promise.reject(new Error("test"));
-      });
+      validateFormData.mockImplementationOnce(() => Promise.reject(new Error("test")));
 
       await httpFunction(context, request);
       expect(context.res.status).toEqual(400);
@@ -50,13 +48,15 @@ describe("[Resume Upload] Unit tests for index.js driver", () => {
         body: {},
       };
 
+      authenticateApiKey.mockImplementationOnce(() => true);
+
       parseFormData.mockImplementationOnce(() => {
         return [{}, {}];
       });
 
-      validateFormData.mockImplementationOnce(() => {
-        return { resume: {}, email: {} };
-      });
+      const mock = { resume: { filename: "test" }, email: { field: "test" } };
+
+      validateFormData.mockImplementationOnce(() => Promise.resolve(mock));
 
       uploadResume.mockImplementationOnce(() => Promise.resolve({ Location: "test" }));
 
@@ -74,9 +74,7 @@ describe("[Resume Upload] Unit tests for index.js driver", () => {
         return [{}, {}];
       });
 
-      validateFormData.mockImplementationOnce(() => {
-        return { resume: {}, email: {} };
-      });
+      validateFormData.mockImplementationOnce(() => Promise.resolve({}));
 
       uploadResume.mockImplementationOnce(() => Promise.reject(new Error("test")));
 

@@ -20,7 +20,7 @@ module.exports = async function(context, req) {
 
   if (req.method === "POST") {
     const parsedData = parseFormData(req);
-    const { resume, email } = await validateFormData(parsedData)
+    const validForm = await validateFormData(parsedData)
       .then(result => {
         return result;
       })
@@ -37,16 +37,16 @@ module.exports = async function(context, req) {
         context.done();
       });
 
-    if (resume && email) {
+    if (validForm) {
+      const { resume, email } = validForm;
       await uploadResume(resume, email)
         .then(result => {
-          context.log(`SUCCESS : ${result}`);
           context.res = {
             status: 200,
             body: {
               error: false,
               status: 200,
-              message: `The file was uploaded successfully : ${result.Location}`,
+              message: `Success : The file was uploaded successfully : ${result.Location}`,
             },
           };
           context.done();
@@ -58,7 +58,7 @@ module.exports = async function(context, req) {
             body: {
               error: true,
               status: 500,
-              message: `An error occured when uploading the file to S3 : ${error}`,
+              message: `Error : An error occured when uploading the file to S3 : ${error}`,
             },
           };
           context.done();
