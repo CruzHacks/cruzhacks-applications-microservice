@@ -165,7 +165,7 @@ Missing either email or resume form data
 {
   "error": true,
   "status": 400,
-  "message": "Invalid Request: Invalid form entry count of {1}, expected {2}"
+  "message": "InvalidFormEntryCount: Invalid form entry count of {1}, expected {2}"
 }
 ```
 
@@ -177,7 +177,7 @@ Empty filename for resume form data
 {
   "error": true,
   "status": 400,
-  "message": "Invalid Request: Invalid filename for resume, can not be an empty string"
+  "message": "EmptyFileName: Invalid filename for resume, can not be an empty string"
 }
 ```
 
@@ -189,7 +189,7 @@ Invalid form entry data type for resume
 {
   "error": true,
   "status": 400,
-  "message": "Invalid Request: Invalid form data type {text/plain}, expected {application/pdf}"
+  "message": "InvalidFormEntryDataType: Invalid form data type {text/plain}, expected {application/pdf}"
 }
 ```
 
