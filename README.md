@@ -2,6 +2,32 @@
 
 [![Build Status](https://dev.azure.com/kyleobrien0535/CruzHacks%202020%20Website/_apis/build/status/CruzHacks.cruzhacks-applications-microservice?branchName=master)](https://dev.azure.com/kyleobrien0535/CruzHacks%202020%20Website/_build/latest?definitionId=7&branchName=master)
 
+- [CruzHacks 2020 Hacker Application Service](#cruzhacks-2020-hacker-application-service)
+  - [Development](#development)
+    - [Dependencies](#dependencies)
+    - [Start](#start)
+    - [Environment Variables](#environment-variables)
+  - [Request Trigger](#request-trigger)
+    - [Request Schema](#request-schema)
+      - [GET](#get)
+      - [POST](#post)
+  - [ResumeUpload](#resumeupload)
+    - [Request Schema](#request-schema-1)
+      - [development](#development)
+      - [production](#production)
+    - [Response Schemas](#response-schemas)
+      - [Success (200)](#success-200)
+      - [Bad Request (400)](#bad-request-400)
+        - [Missing either email or resume form data](#missing-either-email-or-resume-form-data)
+        - [Empty filename for resume form data](#empty-filename-for-resume-form-data)
+        - [Invalid form data type for resume](#invalid-form-data-type-for-resume)
+      - [Missing or Invalid API Key (401)](#missing-or-invalid-api-key-401)
+      - [Internal or S3 Error (500)](#internal-or-s3-error-500)
+  - [Testing](#testing)
+    - [Continuous Integration](#continuous-integration)
+    - [Manual Testing](#manual-testing)
+  - [Technologies](#technologies)
+
 This repo contains the source code for the CruzHacks hacker application storage system, and resume upload endpoint. The service is comprised of two Azure Functions, **RequestTrigger** and **ResumeUpload**.
 
 ## Development
