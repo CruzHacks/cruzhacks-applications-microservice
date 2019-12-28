@@ -13,7 +13,7 @@ jest.mock("./context");
 
 describe("[Resume Upload] Unit tests for function driver, index.js", () => {
   describe("test api key auth", () => {
-    test("should return 401 the user doesen't pass authentication", async () => {
+    test("should return 401 if the user doesn't pass authentication", async () => {
       const request = {
         query: { authentication: "invalid" },
         headers: {},
@@ -27,7 +27,7 @@ describe("[Resume Upload] Unit tests for function driver, index.js", () => {
   });
 
   describe("test POST", () => {
-    test("should return 400 when missing or invalid email or resume parameters", async () => {
+    test("should return 400 when either missing or invalid email and resume parameters", async () => {
       const request = {
         method: "POST",
         body: {},
@@ -43,7 +43,7 @@ describe("[Resume Upload] Unit tests for function driver, index.js", () => {
       expect(context.res.status).toEqual(400);
     });
 
-    test("should return 200 when the hacker application is saved", async () => {
+    test("should return 200 when the resume is uploaded successfully", async () => {
       const request = {
         method: "POST",
         body: {},

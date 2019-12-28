@@ -20,6 +20,7 @@ module.exports = async function(context, req) {
 
   if (req.method === "POST") {
     const parsedData = parseFormData(req);
+
     const validForm = await validateFormData(parsedData)
       .then(result => {
         return result;
@@ -39,6 +40,7 @@ module.exports = async function(context, req) {
 
     if (validForm) {
       const { resume, email } = validForm;
+
       await uploadResume(resume, email)
         .then(result => {
           context.res = {
