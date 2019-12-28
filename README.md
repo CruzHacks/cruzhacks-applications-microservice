@@ -18,9 +18,9 @@
     - [Response Schemas](#response-schemas)
       - [Success (200)](#success-200)
       - [Bad Request (400)](#bad-request-400)
-        - [Missing either email or resume form data](#missing-either-email-or-resume-form-data)
-        - [Empty filename for resume form data](#empty-filename-for-resume-form-data)
-        - [Invalid form data type for resume](#invalid-form-data-type-for-resume)
+        - [InvalidFormEntryCount](#invalidformentrycount)
+        - [EmptyFileName](#emptyfilename)
+        - [InvalidFormEntryDataType](#invalidformentrydatatype)
       - [Missing or Invalid API Key (401)](#missing-or-invalid-api-key-401)
       - [Internal or S3 Error (500)](#internal-or-s3-error-500)
   - [Testing](#testing)
@@ -157,7 +157,9 @@ curl --location --request POST 'http://localhost:7071/api/ResumeUpload' \
 
 #### Bad Request (400)
 
-##### Missing either email or resume form data
+##### InvalidFormEntryCount
+
+Missing either email or resume form data
 
 ```json
 {
@@ -167,7 +169,9 @@ curl --location --request POST 'http://localhost:7071/api/ResumeUpload' \
 }
 ```
 
-##### Empty filename for resume form data
+##### EmptyFileName
+
+Empty filename for resume form data
 
 ```json
 {
@@ -177,7 +181,9 @@ curl --location --request POST 'http://localhost:7071/api/ResumeUpload' \
 }
 ```
 
-##### Invalid form data type for resume
+##### InvalidFormEntryDataType
+
+Invalid form entry data type for resume
 
 ```json
 {

@@ -26,13 +26,13 @@ module.exports = async function(context, req) {
         return result;
       })
       .catch(error => {
-        context.log.error(`Invalid Request: ${error.message}`);
+        context.log.error(`${error}`);
         context.res = {
           status: 400,
           body: {
             error: true,
             status: 400,
-            message: `Invalid Request: ${error.message}`,
+            message: `${error}`,
           },
         };
         context.done();
