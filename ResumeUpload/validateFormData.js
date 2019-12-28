@@ -1,9 +1,4 @@
-class ValidationError extends Error {
-  constructor(name, message) {
-    super(message);
-    this.name = name;
-  }
-}
+const { AppServiceError } = require("../shared/AppServiceError");
 
 const validateFormData = formData => {
   const formDataLength = formData.length;
@@ -11,7 +6,7 @@ const validateFormData = formData => {
 
   if (formDataLength !== validEntryCount) {
     return Promise.reject(
-      new ValidationError(
+      new AppServiceError(
         `InvalidFormEntryCount`,
         `Invalid form entry count of {${formDataLength}}, expected {${validEntryCount}}`,
       ),
@@ -23,14 +18,14 @@ const validateFormData = formData => {
 
   if (filename === "") {
     return Promise.reject(
-      new ValidationError(`EmptyFileName`, `Invalid filename for resume, can not be an empty string`),
+      new AppServiceError(`EmptyFileName`, `Invalid filename for resume, can not be an empty string`),
     );
   }
 
   const validDataType = "application/pdf";
   if (resume.type !== validDataType) {
     return Promise.reject(
-      new ValidationError(
+      new AppServiceError(
         `InvalidFormEntryDataType`,
         `Invalid form data type {${resume.type}}, expected {${validDataType}}`,
       ),
