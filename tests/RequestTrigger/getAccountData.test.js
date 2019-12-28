@@ -1,4 +1,4 @@
-const { getAccountData } = require("../RequestTrigger/getAccountData");
+const { getAccountData } = require("../../RequestTrigger/getAccountData");
 
 describe("Unit Test for Getting Account Data", () => {
   const mockContext = {};

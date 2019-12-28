@@ -1,6 +1,6 @@
-const { authenticateApiKey } = require("../../RequestTrigger/middleware/authentication");
+const { authenticateApiKey } = require("../../../shared/middleware/authentication");
 
-describe("api key authentication middleware uit tests", () => {
+describe("api key authentication middleware unit tests", () => {
   const contextMock = {};
 
   test("should pass with correct request header", () => {

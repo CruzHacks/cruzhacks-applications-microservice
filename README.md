@@ -2,18 +2,79 @@
 
 [![Build Status](https://dev.azure.com/kyleobrien0535/CruzHacks%202020%20Website/_apis/build/status/CruzHacks.cruzhacks-applications-microservice?branchName=master)](https://dev.azure.com/kyleobrien0535/CruzHacks%202020%20Website/_build/latest?definitionId=7&branchName=master)
 
-This repo contains the source code for the CruaHacks hacker application storage system. The service is an Azure Function interfacing with a Postgres database on Microsoft Azure.
+- [CruzHacks 2020 Hacker Application Service](#cruzhacks-2020-hacker-application-service)
+  - [Development](#development)
+    - [Dependencies](#dependencies)
+    - [Start](#start)
+    - [Environment Variables](#environment-variables)
+  - [Request Trigger](#request-trigger)
+    - [Request Schema](#request-schema)
+      - [GET](#get)
+      - [POST](#post)
+  - [ResumeUpload](#resumeupload)
+    - [Request Schema](#request-schema-1)
+      - [development](#development)
+      - [production](#production)
+    - [Response Schemas](#response-schemas)
+      - [Success (200)](#success-200)
+      - [Bad Request (400)](#bad-request-400)
+        - [InvalidFormEntryCount](#invalidformentrycount)
+        - [EmptyFileName](#emptyfilename)
+        - [InvalidFormEntryDataType](#invalidformentrydatatype)
+      - [Unauthorized (401)](#unauthorized-401)
+      - [Internal Server Error (500)](#internal-server-error-500)
+  - [Testing](#testing)
+    - [Continuous Integration](#continuous-integration)
+    - [Manual Testing](#manual-testing)
+  - [Technologies](#technologies)
 
-## Example Requests
+This repo contains the source code for the CruzHacks hacker application storage system, and resume upload endpoint. The service is comprised of two Azure Functions, **RequestTrigger** and **ResumeUpload**.
 
-### GET
+## Development
+
+### Dependencies
+
+- [Azure Function Cole Tools CLI](https://github.com/Azure/azure-functions-core-tools)
+- Local NPM packages --> `npm install`
+
+### Start
+
+`func start`
+
+### Environment Variables
+
+- `AzureWebJobsStorage`
+- `FUNCTIONS_WORKER_RUNTIME`
+- `API_KEY`
+- `DB_USE_SSL`
+- `DB_HOST`
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `DB_HOST`
+- `POSTGRES_DATABASE`
+- `DB_PORT`
+- `AUTH0_CLIENT_ID`
+- `AUTH0_SECRET_ID`
+- `AWS_SECRET_KEY`
+- `AWS_BUCKET_NAME`
+- `AWS_ACCESS_KEY`
+- `AWS_REGION`
+- `APPINSIGHTS_INSTRUMENTATIONKEY`
+
+## Request Trigger
+
+This Azure Function is responsible for interfacing with a Postgres database on Microsoft Azure.
+
+### Request Schema
+
+#### GET
 
 ```shell
 curl --request GET \
   --url 'http://localhost:7071/api/RequestTrigger?authentication=${API_KEY}&accountType=hacker&accountEmail=${HACKER_EMAIL}'
 ```
 
-### POST
+#### POST
 
 ```shell
 curl --request POST \
@@ -56,19 +117,111 @@ curl --request POST \
 '
 ```
 
-## Environment Variables
-- `API_KEY`
-- `POSTGRES_USER`
-- `POSTGRES_PASSWORD`
-- `DB_HOST`
-- `POSTGRES_DATABASE`
-- `DB_PORT`
-- `AUTH0_CLIENT_ID`
-- `AUTH0_SECRET_ID`
+## ResumeUpload
+
+This Azure Function is responsible for uploading resumes as part of the CruzHacks application process. This service uses the [Amazon S3 SDK](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html).
+
+### Request Schema
+
+#### development
+
+```shell
+curl --location --request POST 'http://localhost:7071/api/ResumeUpload' \
+--header 'Content-Type: multipart/form-data' \
+--header 'authentication: clipper' \
+--form 'resume=@mock-resume.pdf' \
+--form 'email=testuser4@ucsc.edu'
+```
+
+#### production
+
+```shell
+curl --location --request POST 'http://localhost:7071/api/ResumeUpload' \
+--header 'Content-Type: multipart/form-data' \
+--header 'authentication: API_KEY' \
+--form 'resume=@resume.pdf' \
+--form 'email=hacker@ucsc.edu'
+```
+
+### Response Schemas
+
+#### Success (200)
+
+```json
+{
+  "error": false,
+  "status": 200,
+  "message": "Success: The file was uploaded successfully: https://cruzhacks-2020-resumes.s3.us-east-2.amazonaws.com/resumes/testuser4%40ucsc.edu/mock-resume.pdf"
+}
+```
+
+#### Bad Request (400)
+
+##### InvalidFormEntryCount
+
+Missing either email or resume form data
+
+```json
+{
+  "error": true,
+  "status": 400,
+  "message": "InvalidFormEntryCount: Invalid form entry count of {1}, expected {2}"
+}
+```
+
+##### EmptyFileName
+
+Empty filename for resume form data
+
+```json
+{
+  "error": true,
+  "status": 400,
+  "message": "EmptyFileName: Invalid filename for resume, can not be an empty string"
+}
+```
+
+##### InvalidFormEntryDataType
+
+Invalid form entry data type for resume
+
+```json
+{
+  "error": true,
+  "status": 400,
+  "message": "InvalidFormEntryDataType: Invalid form data type {text/plain}, expected {application/pdf}"
+}
+```
+
+#### Unauthorized (401)
+
+Missing or Invalid API Key
+
+```json
+{
+  "error": true,
+  "status": 401,
+  "message": "Unable to authenticate request."
+}
+```
+
+#### Internal Server Error (500)
+
+Internal or S3 Error
+
+```json
+{
+  "error": true,
+  "status": 500,
+  "message": "Error occured during upload to S3: EntityTooSmall: Your proposed upload is smaller than the minimum allowed object size. Each part must be at least 5 MB in size, except the last part."
+}
+```
 
 ## Testing
 
-### Continues Integration
+### Continuous Integration
+
+This project uses [Jest](https://jestjs.io/)
 
 **Run All Tests**: `npm run test`
 
@@ -78,9 +231,9 @@ Our target code coverage is greater than 80%.
 
 ### Manual Testing
 
-You can manually test the Azure function and it's read and write operations using Docker. This environment closely resembles the production deployment environment. You need to use a `.env` to have your environment variables be detected by docker.
+You can manually test these Azure functions and their read and write operations using Docker. This environment closely resembles the production deployment environment. You need to use a `.env` to have your environment variables be detected by docker.
 
-### Technologies
+## Technologies
 
 - NodeJS
   - Jest
@@ -90,5 +243,7 @@ You can manually test the Azure function and it's read and write operations usin
   - Azure DevOps
   - Azure Functions
   - Azure Postgres
+  - Azure Pipelines
 - Docker
   - Docker Compose
+- ESLint
