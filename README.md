@@ -21,8 +21,8 @@
         - [InvalidFormEntryCount](#invalidformentrycount)
         - [EmptyFileName](#emptyfilename)
         - [InvalidFormEntryDataType](#invalidformentrydatatype)
-      - [Missing or Invalid API Key (401)](#missing-or-invalid-api-key-401)
-      - [Internal or S3 Error (500)](#internal-or-s3-error-500)
+      - [Unauthorized (401)](#unauthorized-401)
+      - [Internal Server Error (500)](#internal-server-error-500)
   - [Testing](#testing)
     - [Continuous Integration](#continuous-integration)
     - [Manual Testing](#manual-testing)
@@ -193,7 +193,9 @@ Invalid form entry data type for resume
 }
 ```
 
-#### Missing or Invalid API Key (401)
+#### Unauthorized (401)
+
+Missing or Invalid API Key
 
 ```json
 {
@@ -203,7 +205,9 @@ Invalid form entry data type for resume
 }
 ```
 
-#### Internal or S3 Error (500)
+#### Internal Server Error (500)
+
+Internal or S3 Error
 
 ```json
 {
