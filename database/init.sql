@@ -31,7 +31,7 @@ CREATE TABLE hackers
     transportation boolean NOT NULL,
     placeToSleep boolean NOT NULL,
     placeToPark boolean NOT NULL,
-    specialAccomodations character varying(150),
+    specialAccomodations character varying(500),
     confirmedUser boolean DEFAULT false NOT NULL,
     checkedIn boolean DEFAULT false NOT NULL,
     CONSTRAINT hackers_pkey PRIMARY KEY (email)
