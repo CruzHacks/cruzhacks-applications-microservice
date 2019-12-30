@@ -4,6 +4,9 @@ const { parseFormData } = require("./parseFormData");
 const { uploadResume } = require("./uploadResume");
 
 module.exports = async function(context, req) {
+  //   Log incoming request
+  context.log(req);
+
   const isAuthenticated = authenticateApiKey(context, req);
   let jsonResponse = {};
 
@@ -17,7 +20,7 @@ module.exports = async function(context, req) {
       },
     };
 
-    context.log.error(JSON.stringify(jsonResponse, null, 2));
+    context.log(JSON.stringify(jsonResponse, null, 2));
     context.res = jsonResponse;
     context.done();
   }
@@ -39,7 +42,7 @@ module.exports = async function(context, req) {
           },
         };
 
-        context.log.error(JSON.stringify(jsonResponse, null, 2));
+        context.log(JSON.stringify(jsonResponse, null, 2));
         context.res = jsonResponse;
         context.done();
       });
@@ -59,13 +62,12 @@ module.exports = async function(context, req) {
           };
 
           //   Having this log is breaking tests due to Jest mocking complications. Should be fixed.
-          //   context.log(JSON.stringify(jsonResponse, null, 2));
-
+          context.log(JSON.stringify(jsonResponse, null, 2));
           context.res = jsonResponse;
           context.done();
         })
         .catch(error => {
-          context.log.error(`Error occured during upload to S3: ${error}`);
+          context.log(`Error occured during upload to S3: ${error}`);
           context.res = {
             status: 500,
             body: {
