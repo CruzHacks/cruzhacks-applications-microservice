@@ -4,10 +4,14 @@ const { parseFormData } = require("./parseFormData");
 const { uploadResume } = require("./uploadResume");
 
 module.exports = async function(context, req) {
+  //   Log incoming request
+  context.log(req);
+
   const isAuthenticated = authenticateApiKey(context, req);
+  let jsonResponse = {};
 
   if (isAuthenticated === false) {
-    context.res = {
+    jsonResponse = {
       status: 401,
       body: {
         error: true,
@@ -15,6 +19,9 @@ module.exports = async function(context, req) {
         message: "Unable to authenticate request.",
       },
     };
+
+    context.log(JSON.stringify(jsonResponse, null, 2));
+    context.res = jsonResponse;
     context.done();
   }
 
@@ -26,8 +33,7 @@ module.exports = async function(context, req) {
         return result;
       })
       .catch(error => {
-        context.log.error(`${error}`);
-        context.res = {
+        jsonResponse = {
           status: 400,
           body: {
             error: true,
@@ -35,6 +41,9 @@ module.exports = async function(context, req) {
             message: `${error}`,
           },
         };
+
+        context.log(JSON.stringify(jsonResponse, null, 2));
+        context.res = jsonResponse;
         context.done();
       });
 
@@ -43,7 +52,7 @@ module.exports = async function(context, req) {
 
       await uploadResume(resume, email)
         .then(result => {
-          context.res = {
+          jsonResponse = {
             status: 200,
             body: {
               error: false,
@@ -51,10 +60,14 @@ module.exports = async function(context, req) {
               message: `Success: The file was uploaded successfully: ${result.Location}`,
             },
           };
+
+          //   Having this log is breaking tests due to Jest mocking complications. Should be fixed.
+          context.log(JSON.stringify(jsonResponse, null, 2));
+          context.res = jsonResponse;
           context.done();
         })
         .catch(error => {
-          context.log.error(`Error occured during upload to S3: ${error}`);
+          context.log(`Error occured during upload to S3: ${error}`);
           context.res = {
             status: 500,
             body: {
