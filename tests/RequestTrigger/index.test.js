@@ -1,6 +1,6 @@
 const { authenticateApiKey } = require("../../shared/middleware/authentication");
 const { validateAuth0Email } = require("../../RequestTrigger/middleware/account");
-const { insertHackerApplication } = require("../../RequestTrigger/database");
+const { insertHackerApplication, getAcceptanceStatus } = require("../../RequestTrigger/database");
 const { getAccountData } = require("../../RequestTrigger/getAccountData");
 const httpFunction = require("../../RequestTrigger/index");
 const context = require("./context");
@@ -56,6 +56,8 @@ describe("unit tests for index.js driver", () => {
           },
         ]),
       );
+
+      getAcceptanceStatus.mockImplementationOnce(() => Promise.resolve(true));
 
       await httpFunction(context, request);
       expect(context.res.status).toEqual(200);
