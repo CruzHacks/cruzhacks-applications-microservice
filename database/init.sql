@@ -1,43 +1,69 @@
 
 DROP TABLE IF EXISTS hackers;
 
-CREATE TABLE hackers
+create table hackers
 (
-    appNum serial NOT NULL,
-    firstName character varying(100) NOT NULL,
-    lastName character varying(100) NOT NULL,
-    phone CHARACTER VARYING(20) NOT NULL UNIQUE,
-    email character varying(254) NOT NULL UNIQUE,
-    authOID character varying(72) NOT NULL UNIQUE,
-    age character varying(3) NOT NULL,
-    gender character varying(320) NOT NULL,
-    ethnicity character varying(320),
-    school character varying(320) NOT NULL,
-    gradYear character(4) NOT NULL,
-    ucscStudent boolean NOT NULL,
-    ucscCollegeAffiliation character varying(320),
-    major character varying(320) NOT NULL,
-    linkedinUrl character varying(320),
-    githubUrl character varying(320),
-    firstHackathon boolean NOT NULL,
-    firstCruzHacks boolean NOT NULL,
-    participateQuestion character varying(500) NOT NULL,
-    technologyQuestion character varying(500) NOT NULL,
-    seeAtCruzhacks character varying(500) NOT NULL,
-    haveTeam boolean,
-    teamNames character varying(800),
-    teamEmails character varying(800),
-    dietaryRestrictions character varying(150),
-    transportation boolean NOT NULL,
-    placeToSleep boolean NOT NULL,
-    placeToPark boolean NOT NULL,
-    specialAccomodations character varying(500),
-    confirmedUser boolean DEFAULT false NOT NULL,
-    checkedIn boolean DEFAULT false NOT NULL,
-    CONSTRAINT hackers_pkey PRIMARY KEY (email)
-)
-WITH (oids = false);
+    appnum serial not null,
+    firstname varchar(100) not null,
+    lastname varchar(100) not null,
+    phone varchar(20) not null
+        constraint hackers_phone_key
+			unique,
+    email varchar(254) not null
+        constraint hackers_pkey
+			primary key,
+    authoid varchar(72) not null
+        constraint hackers_authoid_key
+			unique,
+    age varchar(3) not null,
+    gender varchar(320) not null,
+    ethnicity varchar(320),
+    school varchar(320) not null,
+    gradyear char(4) not null,
+    ucscstudent boolean not null,
+    ucsccollegeaffiliation varchar(320),
+    major varchar(320) not null,
+    linkedinurl varchar(320),
+    githuburl varchar(320),
+    firsthackathon boolean not null,
+    firstcruzhacks boolean not null,
+    participatequestion varchar(500) not null,
+    technologyquestion varchar(500) not null,
+    seeatcruzhacks varchar(500) not null,
+    haveteam boolean,
+    teamnames varchar(800),
+    teamemails varchar(800),
+    dietaryrestrictions varchar(150),
+    transportation boolean not null,
+    placetosleep boolean not null,
+    placetopark boolean not null,
+    specialaccomodations varchar(500),
+    confirmeduser boolean default false not null,
+    accepted boolean default false not null
+);
 
+DROP TABLE IF EXISTS accepted_hackers
+
+create table accepted_hackers
+(
+    appnum integer,
+    firstname text,
+    lastname text,
+    email text,
+    school text,
+    ucsccollegeaffiliation text,
+    major text,
+    gradyear integer,
+    age integer,
+    gender text,
+    ethnicity text,
+    firsthackathon text,
+    firstcruzhacks text,
+    transportation text,
+    placetosleep text,
+    placetopark text,
+    specialaccomodations text
+);
 
 DROP TABLE IF EXISTS mentors;
 

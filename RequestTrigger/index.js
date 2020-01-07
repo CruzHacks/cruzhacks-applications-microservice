@@ -5,7 +5,7 @@ const appInsights = require("applicationinsights");
 const { authenticateApiKey } = require("../shared/middleware/authentication");
 const { validateAuth0Email } = require("./middleware/account");
 const { getAccountData } = require("./getAccountData");
-const { insertHackerApplication } = require("./database");
+const { insertHackerApplication, getAcceptanceStatus } = require("./database");
 
 // Initialize Azure Application Insights
 appInsights.setup(process.env.APPINSIGHTS_INSTRUMENTATIONKEY).start();
@@ -42,12 +42,21 @@ module.exports = async function(context, req) {
           context.log(JSON.stringify(response.body, null, 2));
           context.res = response;
         } else {
-          const response = {
-            status: 200,
-            body: [accountData],
-          };
-          context.log(JSON.stringify(response.body, null, 2));
-          context.res = response;
+          const queryParameters = req.query;
+          const { accountEmail } = queryParameters;
+
+          return getAcceptanceStatus(accountEmail).then(acceptanceStatus => {
+            const response = {
+              status: 200,
+              body: [accountData],
+            };
+
+            context.log(acceptanceStatus);
+
+            response.body[0].accepted = acceptanceStatus;
+            context.log(JSON.stringify(response.body, null, 2));
+            context.res = response;
+          });
         }
       })
       .catch(error => {

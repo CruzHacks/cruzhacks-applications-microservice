@@ -20,6 +20,16 @@ const getUserDataByEmail = (accountType, accountEmail) => {
     });
 };
 
+const getAcceptanceStatus = accountEmail => {
+  return knex("accepted_hackers")
+    .where("email", accountEmail)
+    .then(response => {
+      console.log(response);
+      console.log(response.length);
+      return response.length !== 0;
+    });
+};
+
 const insertHackerApplication = (accountType, requestBody) => {
   const application = requestBody;
   delete application.authentication;
@@ -30,4 +40,5 @@ const insertHackerApplication = (accountType, requestBody) => {
 module.exports = {
   getUserDataByEmail,
   insertHackerApplication,
+  getAcceptanceStatus,
 };
