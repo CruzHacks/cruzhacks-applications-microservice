@@ -24,8 +24,6 @@ const getAcceptanceStatus = accountEmail => {
   return knex("accepted_hackers")
     .where("email", accountEmail)
     .then(response => {
-      console.log(response);
-      console.log(response.length);
       return response.length !== 0;
     });
 };
