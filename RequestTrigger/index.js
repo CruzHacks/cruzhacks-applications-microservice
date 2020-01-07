@@ -51,7 +51,7 @@ module.exports = async function(context, req) {
               body: [accountData],
             };
 
-            context.log(acceptanceStatus);
+            context.log(acceptanceStatus === true ? "Hacker Accepted" : "Hacker Rejected");
 
             response.body[0].accepted = acceptanceStatus;
             context.log(JSON.stringify(response.body, null, 2));
