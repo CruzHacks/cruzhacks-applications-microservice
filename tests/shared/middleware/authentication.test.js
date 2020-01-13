@@ -49,7 +49,7 @@ describe("api key authentication middleware unit tests", () => {
     expect(authenticateApiKey(contextMock, requestParamsMock)).toBe(false);
   });
 
-  test("should pass with correct requets header and correct query parameter", () => {
+  test("should pass with correct request header and correct query parameter", () => {
     const requestParamsMock = {
       headers: {
         accept: "*/*",
