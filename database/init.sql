@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS hackers;
 
 create table hackers
@@ -40,9 +39,10 @@ create table hackers
     specialaccomodations varchar(500),
     confirmeduser boolean default false not null,
     accepted boolean default false not null
-);
+)
+WITH (oids = false);
 
-DROP TABLE IF EXISTS accepted_hackers
+DROP TABLE IF EXISTS accepted_hackers;
 
 create table accepted_hackers
 (
@@ -63,7 +63,8 @@ create table accepted_hackers
     placetosleep text,
     placetopark text,
     specialaccomodations text
-);
+)
+WITH (oids = false);
 
 DROP TABLE IF EXISTS mentors;
 
@@ -171,7 +172,7 @@ DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements
 (
     announceDatetime character varying(100) NOT NULL UNIQUE,
-    announcement character varying(160) NOT NULL,
+    announcement character varying(160) NOT NULL
 )
 WITH (oids = false);    
 
